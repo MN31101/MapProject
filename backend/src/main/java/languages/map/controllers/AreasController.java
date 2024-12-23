@@ -4,9 +4,7 @@ import languages.map.models.Areas;
 import languages.map.services.AreasService;
 import org.bson.types.ObjectId;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,5 +22,14 @@ public class AreasController {
     @GetMapping("/areas/{id}")
     public ResponseEntity<Areas> getAreasById(@PathVariable ObjectId id){
         return ResponseEntity.ok().body(areasService.getAreasById(id));
+    }
+    @PostMapping("/areas")
+    public ResponseEntity<Areas> saveAreas(@RequestBody Areas areas){
+        return ResponseEntity.ok().body(areasService.saveAreas(areas));
+    }
+
+    @PutMapping("/areas/{id}")
+    public ResponseEntity<Areas> updateAreas(@RequestBody Areas areas, @PathVariable ObjectId id){
+        return ResponseEntity.ok().body(areasService.updateAreas(id, areas));
     }
 }

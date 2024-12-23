@@ -23,7 +23,17 @@ public class AreasService {
     public Areas saveAreas(Areas areas){
         return areasRepository.save(areas);
     }
-    public Areas getAreasByYear(int year){
-        return areasRepository.findByYear(year).orElseThrow(() -> new RuntimeException("No areas by year: " + year));
+    public Areas updateAreas(ObjectId id, Areas newAreas) {
+        return areasRepository.findById(id)
+                .map(areas -> {
+                    areas.setColor(newAreas.getColor());
+                    areas.setCoords(newAreas.getCoords());
+                    areas.setName(newAreas.getName());
+                    areas.setYear(newAreas.getYear());
+                    areas.setIntensity(newAreas.getIntensity());
+                    areas.setDescription(newAreas.getDescription());
+                    return areasRepository.save(areas);
+                })
+                .orElseGet(()-> areasRepository.save(newAreas));
     }
 }
