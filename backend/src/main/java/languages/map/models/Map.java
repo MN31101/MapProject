@@ -1,6 +1,7 @@
 package languages.map.models;
 
 import lombok.Data;
+import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,8 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Map {
     @Id
     ObjectId id;
-    String name;
+    Binary preview;
+    String title;
     String description;
-    byte zoomLevel;
-    ObjectId[] areas_id;
 }
