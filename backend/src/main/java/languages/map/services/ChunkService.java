@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public class ChunkService {
-    public final ChunkRepository chunkRepository;
+    private final ChunkRepository chunkRepository;
 
     public ChunkService(ChunkRepository chunkRepository) {
         this.chunkRepository = chunkRepository;
@@ -24,6 +24,9 @@ public class ChunkService {
                 .orElseThrow(
                     ()->new RuntimeException("can't find chunk by id: "+id)
                 );
+    }
+    public Chunk createChunk(Chunk chunk){
+        return chunkRepository.save(chunk);
     }
 
 }

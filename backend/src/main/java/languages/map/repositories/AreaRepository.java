@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface AreaRepository extends MongoRepository<Area, ObjectId> {
     Optional<List<Area>> findAllByMap_id(ObjectId map_id);
     Optional<Area> updateAreaById(ObjectId id, Area body);
-    <S extends Area> S save(S entity, ObjectId map_id);
     Optional<List<Area>> findAllByMap_idAAndYear(ObjectId map_id, Integer year);
 }
