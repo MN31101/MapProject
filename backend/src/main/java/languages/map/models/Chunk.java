@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "chunk")
 public class Chunk {
     @Id
-    ObjectId id0;
-    Binary size;
+    ObjectId id;
     GeoJsonPoint point;
+    Binary image;
     Integer zoom_level;
 }

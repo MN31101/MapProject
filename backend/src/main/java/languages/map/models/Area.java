@@ -8,14 +8,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document(collection = "area")
-public class Areas {
+public class Area {
     @Id
     ObjectId id;
     ObjectId map_id;
+    ObjectId[] chunks_id;
     GeoJsonPolygon[] coords;
-    Double intensity;
     String description;
     String name;
+    Double intensity;
     Integer[] color = new Integer[3];
     Integer year;
 }
