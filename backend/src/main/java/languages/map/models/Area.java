@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Area {
     @Id
     ObjectId id;
-    ObjectId map_id;
-    ObjectId[] chunks_id;
+    ObjectId mapId;
+    ObjectId[] chunksId;
     GeoJsonPolygon[] coords;
     String description;
     String name;
