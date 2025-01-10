@@ -14,6 +14,7 @@ import java.util.List;
 public class LanguagesZoneController {
     private final LanguagesZoneService languagesZoneService;
 
+
     public LanguagesZoneController(LanguagesZoneService languagesZoneService) {
         this.languagesZoneService = languagesZoneService;
     }
@@ -30,6 +31,12 @@ public class LanguagesZoneController {
     @GetMapping("/areas/{year}")
     public ResponseEntity<List<LanguagesZone>> getLanguagesZonesRelatedToChunk( @RequestBody BoundingBoxRequest boundingBoxRequest,
                                                                                 @PathVariable Integer year){
+        if (boundingBoxRequest.getLeftTopPointLatLon() == null
+                || boundingBoxRequest.getRightBottomPointLatLon() == null
+                || boundingBoxRequest.getLeftTopPointLatLon().length != 2
+                || boundingBoxRequest.getRightBottomPointLatLon().length != 2) {
+            throw new IllegalArgumentException("Invalid bounding box coordinates");
+        }
         return ResponseEntity.ok().body(languagesZoneService.getLanguagesZone(boundingBoxRequest, year));
     }
 
