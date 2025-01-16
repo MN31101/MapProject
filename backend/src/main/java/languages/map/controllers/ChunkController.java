@@ -39,7 +39,7 @@ public class ChunkController {
      * @param chunk Chunk`s body which wanted to create
      * @return into repository new Chunk
      */
-    @PostMapping("chunk")
+    @PostMapping("/chunk")
     public ResponseEntity<Chunk> createChunk(@RequestBody Chunk chunk){
         return ResponseEntity.ok().body(chunkService.createChunk(chunk));
     }
