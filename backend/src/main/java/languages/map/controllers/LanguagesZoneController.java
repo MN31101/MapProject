@@ -23,12 +23,12 @@ public class LanguagesZoneController {
      * @param year - year that wanted
      * @return - List of Areas that related to year and map
      */
-    @GetMapping("//all/{year}")
+    @GetMapping("/all/{year}")
     public ResponseEntity<List<LanguagesZone>> getLanguagesZone(@PathVariable Integer year){
         return ResponseEntity.ok().body(languagesZoneService.getLanguagesZoneByYear(year));
     }
 
-    @GetMapping("/areas/{year}")
+    @PostMapping("/areas/{year}")
     public ResponseEntity<List<LanguagesZone>> getLanguagesZonesRelatedToChunk( @RequestBody BoundingBoxRequest boundingBoxRequest,
                                                                                 @PathVariable Integer year){
         if (boundingBoxRequest.getLeftTopPointLatLon() == null
