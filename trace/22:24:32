@@ -1,0 +1,44 @@
+curl -X GET \
+  'http://127.0.0.1:8081/api/chunks' \
+  -H 'Accept: application/json'
+[{"id":{"timestamp":1735239070,"date":"2024-12-26T18:51:10.000+00:00"},"languages_id":null,"center":null,"zoom_level":1},{"id":{"timestamp":1736073437,"date":"2025-01-05T10:37:17.000+00:00"},"languages_id":null,"center":null,"zoom_level":12},{"id":{"timestamp":1737058704,"date":"2025-01-16T20:18:24.000+00:00"},"languages_id":[{"timestamp":1350508407,"date":"2012-10-17T21:13:27.000+00:00"}],"center":{"x":14.41,"y":50.08,"coordinates":[14.41,50.08],"type":"Point"},"zoom_level":5}][shio] ~ 22:22
+[shio] ~ 22:22 curl -X GET \
+  'http://127.0.0.1:8081/api/all/2024' \
+  -H 'Accept: application/json'
+{"timestamp":"2025-01-16T20:22:54.154+00:00","status":404,"error":"Not Found","path":"/api/all/2024"}[scurl -X GET \curl -X GET \
+  'http://127.0.0.1:8081/api/all/2023' \
+  -H 'Accept: application/json'
+{"timestamp":"2025-01-16T20:22:57.938+00:00","status":404,"error":"Not Found","path":"/a[shio] ~ 22:22 curl -X GET \curl -X GET \
+  'http://127.0.0.1:8081/api/areas/2024' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "leftTopPointLatLon": [50.08, 14.41],
+    "rightBottomPointLatLon": [50.07, 14.42]
+  }'
+[{"id":{"timestamp":1736073420,"date":"2025-01-05T10:37:00.000+00:00"},"coords":[],"description":"First test region","name":"Region A","intensity":0.75,"color":[255,0,0],"year":2024},{"id":{"timestamp":1736276167,"date":"2025-01-07T18:56:07.000+00:00"},"coords":[],"description":"Second test region","name":"Region B","intensity":0.75,"color":[0,255,0],"year":2024},{"id":{"timestamp":1736282188,"date":"2025-01-07T20:36:28.000+00:00"},"coords":[],"description":"Third test region","name":"Region C","intensity":0.75,"color":[0,0,255],"year":2024},{"id":{"timestamp":1736284073,"date":"2025-01-07T21:07:53.000+00:00"},"coords":[],"description":"N test region","name":"Region D","intensity":0.75,"color":[205,25,25],"year":2024},{"id":{"timestamp":1737058785,"date":"2025-01-16T20:19:45.000+00:00"},"coords":[],"description":"New dialect zone","name":"Zone D","intensity":0.75,"color":[255,128,0],"year":2024},{"id":{"timestamp":1350508407,"date":"2012-10-17T21:13:27.000+00:00"},"coords":[],"description":"Updated dialect zone","name":"Updated Zone D","intensity":0.8,"color":[255,128,0],"year":2024}][shio] ~ 22:23
+[shio] ~ 22:23 curl -X GET \
+  'http://127.0.0.1:8081/api/areas/2024' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "leftTopPointLatLon": [50.08, 14.41],
+    "rightBottomPointLatLon": [50.07, 14.42]
+  }'
+[{"id":{"timestamp":1736073420,"date":"2025-01-05T10:37:00.000+00:00"},"coords":[],"description":"First test region","name":"Region A","intensity":0.75,"color":[255,0,0],"year":2024},{"id":{"timestamp":1736276167,"date":"2025-01-07T18:56:07.000+00:00"},"coords":[],"description":"Second test region","name":"Region B","intensity":0.75,"color":[0,255,0],"year":2024},{"id":{"timestamp":1736282188,"date":"2025-01-07T20:36:28.000+00:00"},"coords":[],"description":"Third test region","name":"Region C","intensity":0.75,"color":[0,0,255],"year":2024},{"id":{"timestamp":1736284073,"date":"2025-01-07T21:07:53.000+00:00"},"coords":[],"description":"N test region","name":"Region D","intensity":0.75,"color":[205,25,25],"year":2024},{"id":{"timestamp":1737058785,"date":"2025-01-16T20:19:45.000+00:00"},"coords":[],"description":"New dialect zone","name":"Zone D","intensity":0.75,"color":[255,128,0],"year":2024},{"id":{"timestamp":1350508407,"date":"2012-10-17T21:13:27.000+00:00"},"coords":[],"description":"Updated dialect zone","name":"Updated Zone D","intensity":0.8,"color":[255,128,0],"year":2024}][shio] ~ 22:23
+[shio] ~ 22:23
+[shio] ~ 22:23
+[shio] ~ 22:23
+[shio] ~ 22:23
+[shio] ~ 22:23 curl -X POST \
+  'http://127.0.0.1:8081/api/chunk' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "languages_id": ["507f1f77bcf86cd799439012"],
+    "center": {
+      "type": "Point",
+      "coordinates": [14.42, 50.09]
+    },
+    "zoom_level": 5
+  }'

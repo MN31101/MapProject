@@ -49,268 +49,103 @@ chmod +x ./gradlew
 sudo docker compose up
 ```
 
-# Doc [AI GENERATED]
-## Headers
-
-All requests should include the following headers:
-
-```
-Content-Type: application/json
-Accept: application/json
-```
-
-## Base URL
-`http://127.0.0.1:8081/api`
-
+# Doc
 ## Chunks API
 
 ### Get All Chunks
-Retrieves a list of all map chunks.
-
-**Endpoint:**
-```http
-GET /chunks
-```
-
-**Curl Example:**
 ```bash
 curl -X GET \
   'http://127.0.0.1:8081/api/chunks' \
   -H 'Accept: application/json'
 ```
 
-**Example Response:**
-```json
-[
-  {
-    "id": "507f1f77bcf86cd799439011",
-    "languages_id": ["507f1f77bcf86cd799439012", "507f1f77bcf86cd799439013"],
-    "center": {
-      "type": "Point",
-      "coordinates": [14.41, 50.08]
-    },
-    "zoom_level": 5
-  },
-  {
-    "id": "507f1f77bcf86cd799439014",
-    "languages_id": ["507f1f77bcf86cd799439015"],
-    "center": {
-      "type": "Point",
-      "coordinates": [2.35, 48.85]
-    },
-    "zoom_level": 6
-  }
-]
-```
-
-### Get Specific Chunk
-Retrieves a specific chunk by its ID.
-
-**Endpoint:**
-```http
-GET /chunks/{chunk_id}
-```
-
-**Curl Example:**
-```bash
-curl -X GET \
-  'http://127.0.0.1:8081/api/chunks/507f1f77bcf86cd799439011' \
-  -H 'Accept: application/json'
-```
-
-**Example Response:**
-```json
-{
-  "id": "507f1f77bcf86cd799439011",
-  "languages_id": ["507f1f77bcf86cd799439012", "507f1f77bcf86cd799439013"],
-  "center": {
-    "type": "Point",
-    "coordinates": [14.41, 50.08]
-  },
-  "zoom_level": 5
-}
-```
-
-### Create New Chunk
-Creates a new chunk in the system.
-
-**Endpoint:**
-```http
-POST /chunk
-```
-
-**Curl Example:**
+### Create Basic Chunk
 ```bash
 curl -X POST \
   'http://127.0.0.1:8081/api/chunk' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
-    "languages_id": ["507f1f77bcf86cd799439012"],
     "center": {
       "type": "Point",
-      "coordinates": [14.41, 50.08]
+      "coordinates": [15.41, 51.08]
     },
     "zoom_level": 5
   }'
 ```
 
-**Example Response:**
-```json
-{
-  "id": "507f1f77bcf86cd799439016",
-  "languages_id": ["507f1f77bcf86cd799439012"],
-  "center": {
-    "type": "Point",
-    "coordinates": [14.41, 50.08]
-  },
-  "zoom_level": 5
-}
+### Create Detailed Zoom Chunk
+```bash
+curl -X POST \
+  'http://127.0.0.1:8081/api/chunk' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "center": {
+      "type": "Point",
+      "coordinates": [14.42, 50.09]
+    },
+    "zoom_level": 16
+  }'
+```
+
+### Create Medium Zoom Chunk
+```bash
+curl -X POST \
+  'http://127.0.0.1:8081/api/chunk' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "center": {
+      "type": "Point",
+      "coordinates": [14.42, 50.09]
+    },
+    "zoom_level": 10
+  }'
+```
+
+### Create Wide Area Chunk
+```bash
+curl -X POST \
+  'http://127.0.0.1:8081/api/chunk' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "center": {
+      "type": "Point",
+      "coordinates": [14.42, 50.09]
+    },
+    "zoom_level": 4
+  }'
 ```
 
 ## Language Zones API
 
-### Get Language Zones by Year
-Retrieves all language zones for a specific year.
-
-**Endpoint:**
-```http
-GET /all/{year}
-```
-
-**Curl Example:**
-```bash
-curl -X GET \
-  'http://127.0.0.1:8081/api/all/2024' \
-  -H 'Accept: application/json'
-```
-
-**Example Response:**
-```json
-[
-  {
-    "id": "507f1f77bcf86cd799439020",
-    "coords": [
-      {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [14.41, 50.08],
-            [14.42, 50.08],
-            [14.42, 50.07],
-            [14.41, 50.07],
-            [14.41, 50.08]
-          ]
-        ]
-      }
-    ],
-    "description": "Urban dialect zone A",
-    "name": "Zone A",
-    "intensity": 0.75,
-    "color": [255, 128, 0],
-    "year": 2024
-  }
-]
-```
-
-### Get Language Zones Within Bounding Box
-Retrieves language zones within specified geographical boundaries for a given year.
-
-**Endpoint:**
-```http
-GET /areas/{year}
-```
-
-**Curl Example:**
+### Get Zones by Year (Large Area)
 ```bash
 curl -X GET \
   'http://127.0.0.1:8081/api/areas/2024' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
-    "leftTopPointLatLon": [50.08, 14.41],
-    "rightBottomPointLatLon": [50.07, 14.42]
+    "leftTopPointLatLon": [52.08, 14.41],
+    "rightBottomPointLatLon": [50.07, 16.42]
   }'
 ```
 
-**Example Response:**
-```json
-[
-  {
-    "id": "507f1f77bcf86cd799439020",
-    "coords": [
-      {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [14.41, 50.08],
-            [14.42, 50.08],
-            [14.42, 50.07],
-            [14.41, 50.07],
-            [14.41, 50.08]
-          ]
-        ]
-      }
-    ],
-    "description": "Historical dialect area B",
-    "name": "Zone B",
-    "intensity": 0.75,
-    "color": [255, 128, 0],
-    "year": 2024
-  }
-]
-```
-
-### Get Specific Language Zone
-Retrieves a specific language zone by its ID.
-
-**Endpoint:**
-```http
-GET /area/{area_id}
-```
-
-**Curl Example:**
+### Get Zones by Year (Precise Area)
 ```bash
 curl -X GET \
-  'http://127.0.0.1:8081/api/area/507f1f77bcf86cd799439020' \
-  -H 'Accept: application/json'
+  'http://127.0.0.1:8081/api/areas/2024' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "leftTopPointLatLon": [50.085, 14.415],
+    "rightBottomPointLatLon": [50.075, 14.425]
+  }'
 ```
 
-**Example Response:**
-```json
-{
-  "id": "507f1f77bcf86cd799439020",
-  "coords": [
-    {
-      "type": "Polygon",
-      "coordinates": [
-        [
-          [14.41, 50.08],
-          [14.42, 50.08],
-          [14.42, 50.07],
-          [14.41, 50.07],
-          [14.41, 50.08]
-        ]
-      ]
-    }
-  ],
-  "description": "Mixed dialect region C",
-  "name": "Zone C",
-  "intensity": 0.75,
-  "color": [255, 128, 0],
-  "year": 2024
-}
-```
-
-### Create New Language Zone
-Creates a new language zone.
-
-**Endpoint:**
-```http
-POST /area
-```
-
-**Curl Example:**
+### Create Basic Language Zone
 ```bash
 curl -X POST \
   'http://127.0.0.1:8081/api/area' \
@@ -322,35 +157,27 @@ curl -X POST \
         "type": "Polygon",
         "coordinates": [
           [
-            [14.41, 50.08],
-            [14.42, 50.08],
-            [14.42, 50.07],
-            [14.41, 50.07],
-            [14.41, 50.08]
+            [15.41, 51.08],
+            [15.42, 51.08],
+            [15.42, 51.07],
+            [15.41, 51.07],
+            [15.41, 51.08]
           ]
         ]
       }
     ],
-    "description": "New dialect zone",
-    "name": "Zone D",
+    "description": "Test Zone",
+    "name": "Test Zone Name",
     "intensity": 0.75,
-    "color": [255, 128, 0],
+    "color": [128, 64, 128],
     "year": 2024
   }'
 ```
 
-### Update Language Zone
-Updates an existing language zone.
-
-**Endpoint:**
-```http
-PUT /area/{area_id}
-```
-
-**Curl Example:**
+### Create Multi-Polygon Language Zone
 ```bash
-curl -X PUT \
-  'http://127.0.0.1:8081/api/area/507f1f77bcf86cd799439020' \
+curl -X POST \
+  'http://127.0.0.1:8081/api/area' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
@@ -359,64 +186,92 @@ curl -X PUT \
         "type": "Polygon",
         "coordinates": [
           [
-            [14.41, 50.08],
-            [14.42, 50.08],
-            [14.42, 50.07],
-            [14.41, 50.07],
-            [14.41, 50.08]
+            [15.41, 51.08],
+            [15.42, 51.08],
+            [15.42, 51.07],
+            [15.41, 51.07],
+            [15.41, 51.08]
+          ]
+        ]
+      },
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [15.43, 51.09],
+            [15.44, 51.09],
+            [15.44, 51.08],
+            [15.43, 51.08],
+            [15.43, 51.09]
           ]
         ]
       }
     ],
-    "description": "Updated dialect zone",
-    "name": "Updated Zone D",
-    "intensity": 0.8,
-    "color": [255, 128, 0],
+    "description": "Multi Polygon Test",
+    "name": "Multi Zone",
+    "intensity": 0.85,
+    "color": [64, 128, 255],
     "year": 2024
   }'
 ```
 
-## Error Responses
-
-### 400 Bad Request
-```json
-{
-  "timestamp": "2024-01-16T10:00:00.000+00:00",
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Invalid bounding box coordinates"
-}
+### Create High Intensity Zone
+```bash
+curl -X POST \
+  'http://127.0.0.1:8081/api/area' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "coords": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [15.41, 51.08],
+            [15.42, 51.08],
+            [15.42, 51.07],
+            [15.41, 51.07],
+            [15.41, 51.08]
+          ]
+        ]
+      }
+    ],
+    "description": "High Intensity Zone",
+    "name": "Bright Zone",
+    "intensity": 0.95,
+    "color": [255, 255, 0],
+    "year": 2024
+  }'
 ```
 
-### 404 Not Found
-```json
-{
-  "timestamp": "2024-01-16T10:00:00.000+00:00",
-  "status": 404,
-  "error": "Not Found",
-  "message": "Language zone not found with id: 507f1f77bcf86cd799439020"
-}
+## Query Other Years
+
+### Get 2023 Zones
+```bash
+curl -X GET \
+  'http://127.0.0.1:8081/api/areas/2023' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "leftTopPointLatLon": [51.08, 14.41],
+    "rightBottomPointLatLon": [50.07, 15.42]
+  }'
 ```
 
-### 500 Internal Server Error
-```json
-{
-  "timestamp": "2024-01-16T10:00:00.000+00:00",
-  "status": 500,
-  "error": "Internal Server Error",
-  "message": "An unexpected error occurred"
-}
+### Get 2022 Zones
+```bash
+curl -X GET \
+  'http://127.0.0.1:8081/api/areas/2022' \
+  -H 'Content-Type: application/json' \
+  -H 'Accept: application/json' \
+  -d '{
+    "leftTopPointLatLon": [51.08, 14.41],
+    "rightBottomPointLatLon": [50.07, 15.42]
+  }'
 ```
 
-## Notes
-
-1. All IDs are in MongoDB ObjectId format (24-character hexadecimal)
-2. GeoJSON coordinates are in [longitude, latitude] format
-3. The color array must contain exactly 3 integers (RGB values, 0-255)
-4. All requests return JSON responses
-5. When creating or updating language zones, all fields are required
-6. The `intensity` value should be between 0 and 1
-7. For polygon coordinates, the first and last points must be identical to close the polygon
-8. Years should be provided as integers (e.g., 2024)
-9. Zoom levels typically range from 0 (most zoomed out) to 18 (most zoomed in)
-10. Bounding box coordinates must be provided in [latitude, longitude] format
+## Usage Notes
+1. You can adjust zoom levels (1-16), intensity (0-1), and colors ([0-255, 0-255, 0-255])
+2. Always ensure the polygon coordinates form a closed loop (first and last points match)
+3. The server returns JSON responses for all requests
+4. The timestamps in IDs are automatically generated by the server
