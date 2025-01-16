@@ -11,8 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface LanguagesZoneRepository extends MongoRepository<LanguagesZone, ObjectId> {
-
     Optional<List<LanguagesZone>> findAllByYear(Integer year);
-    Optional<List<LanguagesZone>> findAllByYearAndCoordsWithin(Integer year, GeoJsonPolygon boundingBox);
+    // Optional<List<LanguagesZone>> findAllByYearAndCoordsWithin(Integer year, GeoJsonPolygon boundingBox);
 
 }

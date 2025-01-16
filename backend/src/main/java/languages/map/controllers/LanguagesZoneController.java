@@ -23,7 +23,7 @@ public class LanguagesZoneController {
      * @param year - year that wanted
      * @return - List of Areas that related to year and map
      */
-    @GetMapping("/areas/all/{year}")
+    @GetMapping("//all/{year}")
     public ResponseEntity<List<LanguagesZone>> getLanguagesZone(@PathVariable Integer year){
         return ResponseEntity.ok().body(languagesZoneService.getLanguagesZoneByYear(year));
     }

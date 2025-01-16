@@ -1,7 +1,6 @@
 package languages.map.services;
 
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.operation.overlay.OverlayOp;
 import org.springframework.data.geo.Point;
 import languages.map.dto.BoundingBoxRequest;
@@ -17,7 +16,6 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,17 +49,18 @@ public class LanguagesZoneService {
     }
 
     private List<GeoJsonPolygon> clipPolygons(LanguagesZone zone, Geometry boundingBox) {
-        return zone.getCoords().stream()
-                .map(geoJsonPolygon -> clipPolygon(geoJsonPolygon, boundingBox))
-                .filter(java.util.Objects::nonNull)
-                .toList();
+        List<GeoJsonPolygon> allPolygons = new ArrayList<>();
+        for (GeoJsonPolygon geoJsonPolygon : zone.getCoords()) {
+            allPolygons.addAll(clipPolygon(geoJsonPolygon, boundingBox));  // Add the list of clipped polygons
+        }
+        return allPolygons;
     }
 
-    private GeoJsonPolygon clipPolygon(GeoJsonPolygon geoJsonPolygon, Geometry boundingBox) {
+
+    private List<GeoJsonPolygon> clipPolygon(GeoJsonPolygon geoJsonPolygon, Geometry boundingBox) {
         try {
             String wkt = createWKT(geoJsonPolygon);
             Geometry zoneGeometry = new WKTReader().read(wkt);
-
 
             if (!zoneGeometry.isValid()) {
                 zoneGeometry = zoneGeometry.buffer(0);
@@ -70,15 +69,25 @@ public class LanguagesZoneService {
             Geometry clippedGeometry = OverlayOp.overlayOp(zoneGeometry, boundingBox, OverlayOp.INTERSECTION);
 
             if (!clippedGeometry.isEmpty()) {
-                List<Point> newPoints = createCutPoints(zoneGeometry, clippedGeometry);
-                return new GeoJsonPolygon(newPoints);
+                if (clippedGeometry instanceof MultiPolygon multiPolygon) {
+                    List<GeoJsonPolygon> polygons = new ArrayList<>();
+                    for (int i = 0; i < multiPolygon.getNumGeometries(); i++) {
+                        Geometry poly = multiPolygon.getGeometryN(i);
+                        List<Point> newPoints = createCutPoints(zoneGeometry, poly);
+                        polygons.add(new GeoJsonPolygon(newPoints));
+                    }
+                    return polygons;
+                } else {
+                    List<Point> newPoints = createCutPoints(zoneGeometry, clippedGeometry);
+                    return List.of(new GeoJsonPolygon(newPoints));
+                }
             }
-
-            return null;
+            return List.of();
         } catch (Exception e) {
             throw new RuntimeException("Error processing geometry", e);
         }
     }
+
 
     private List<Point> createCutPoints(Geometry zoneGeometry, Geometry clippedGeometry) {
         List<Point> newPoints = new ArrayList<>();
@@ -103,17 +112,6 @@ public class LanguagesZoneService {
                         .map(p -> p.getX() + " " + p.getY())
                         .collect(Collectors.joining(", ")));
     }
-
-
-    private boolean containsCoordinate(Coordinate[] coords, Coordinate coord) {
-        for (Coordinate c : coords) {
-            if (c.equals(coord)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 
     private static Geometry getBoundingBox(@NotNull BoundingBoxRequest boundingBoxRequest) {
