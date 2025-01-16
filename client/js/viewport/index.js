@@ -1,68 +1,7 @@
+import MapAPI from '../MapApi/index.js';
+
+
 /*
-
-    // An idiot admires complexity.
-
-    Features: 
-        + Mobile Responsivness
-        + Draw Languages by yourself
-
-    Style:
-        - color (rgb)
-        - alpha
-
-[done] + drawCoordinates(canvas, arrayLatLonCoordinates, centerLatLon, style)
-[done] + LatLonToMercator(point)
-[done] + LatLonToMercator(array of points)
-[done] + MercatorToPX(center, leftTopPointLatLon, rightBottomPointLatLon, mercatorPoint)
-[done] + MercatorToPX(center, leftTopPointLatLon, rightBottomPointLatLon, mercatorPointArray)
-
-[rejected] + Simplify(center, leftTopPointMercator, rightBottomPointMercator, mercatorPointArray, zoomLevel)
-        // deletes points from structure if two points closer then 1px apart. 
-    + GetChunkGrid(center, leftTopPointLatLon, rightBottomPointLatLon, chunkAmount)
-        // Returns LeftTop RightBottom Center of each Chunk
-
-    API
-        getChunk body: 
-            {
-                year
-                leftTopPointLatLon: [x, y],
-                rightBottomPointLatLon: [x, y]
-            } 
-        returns {
-                [
-                    ..., {
-                        *languageZone*, 
-                        coordinates: [...[lattitude, longitude]], 
-                    }
-                ]
-            }
-
-    ChunkManager
-        + calculateRequiredChunks
-        + getChunks
-            // API Call?
-
-    Viewport: 
-        - (meters per pixel in one chunk) // for display purposes 
-        - array of all chunks?
-        - center (latlon)
-        + clear
-        + drawBackground 
-        + drawChunks(chunks)
-        + updateCenter(dx_pixels, dy_pixels)
-            // update center (latlon) converting pixels do distance
-            // Use of zoomLevel
-
-    Chunk: 
-        - center (latlon)
-        - rect ((latlon, latlon), (latlon, latlon))
-        - languageZones [...]
-        - Year  
-
-    LanguageZone: 
-        - coords [..., (latlon)]
-        - Name, etc. 
-
 
 Algorythm: 
     we have viewport 
@@ -91,19 +30,6 @@ Algorythm:
 
 
 
-
-
-export class Style {
-    constructor(rgb, a) { 
-        this.rgb = rgb;
-        this.a = a;
-    }
-
-    get r() { return this.rgb[0]}
-    get g() { return this.rgb[1]}
-    get b() { return this.rgb[2]}
-    
-}
 
 export function latLonToMercator(point) {
     if (Array.isArray(point[0])) {
@@ -242,17 +168,17 @@ export class LanguageZone {
     }
 }
 
-// Simplified Chunk class
+
 export class Chunk {
-    constructor(zones, leftTop, rightBottom, center) {
+    constructor(zones, leftTop, rightBottom, center, zoomLevel) {
         this.zones = zones;
         this.leftTop = leftTop;
         this.rightBottom = rightBottom;
         this.center = center;
+        this.zoomLevel = zoomLevel;
     }
 }
 
-// Helper function to check if a point is within bounds
 export function isPointInBounds(point, leftTop, rightBottom) {
     return point[0] >= leftTop[0] && 
            point[0] <= rightBottom[0] && 
@@ -260,7 +186,6 @@ export function isPointInBounds(point, leftTop, rightBottom) {
            point[1] <= rightBottom[1];
 }
 
-// Helper function to calculate the distance between two points in meters
 export function calculateDistance(point1, point2) {
     const R = 6371e3; // Earth's radius in meters
     const φ1 = point1[0] * Math.PI / 180;
@@ -312,143 +237,196 @@ export function calculateChunkGrid(center, leftTop, rightBottom, chunksPerAxis =
     return chunks;
 }
 
-// Fetch chunk data from API
-export async function fetchChunkData(chunkBounds, year) {
-    const response = await fetch('/api/areas/' + year, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            leftTopPointLatLon: chunkBounds.leftTop,
-            rightBottomPointLatLon: chunkBounds.rightBottom
-        })
-    });
-    
-    if (!response.ok) {
-        throw new Error('Failed to fetch chunk data');
+export class Style {
+    constructor(rgb, a = 0.5) { 
+        this.rgb = rgb;
+        this.a = a;
     }
-    
-    return await response.json();
+
+    get r() { return this.rgb[0] }
+    get g() { return this.rgb[1] }
+    get b() { return this.rgb[2] }
 }
 
-export function calculateZoomLevel(leftTop, rightBottom) {
-    const latSpan = Math.abs(rightBottom[0] - leftTop[0]);
-    const baseZoom = Math.log2(360 / latSpan);
-    return Math.floor(baseZoom);
-}
+
 
 export class Viewport {
     #canvas;
     #chunks = [];
+    #api;
     
-    constructor(width, height, id) {
-        this.leftTop = [90, -180];
-        this.rightBottom = [-90, 180];
-        this.center = [0, 0];
+    constructor(width, height, id = 'map-canvas') {
+        this.#api = new MapAPI('http://127.0.0.1:8081/api');
         
+        // Initial viewport state
+        this.leftTop = [51, 14];          // Starting position
+        this.rightBottom = [50, 15];  
+        this.center = [
+            (this.leftTop[0] + this.rightBottom[0]) / 2,
+            (this.leftTop[1] + this.rightBottom[1]) / 2
+        ];
+        
+        // Zoom state
+        this.metersPerPixel = 50;  // Initial zoom level
+        
+        // Canvas setup
         this.#canvas = document.createElement('canvas');
         this.#canvas.width = width;
         this.#canvas.height = height;
         this.#canvas.id = id;
         
+        // Mouse interaction state
         this.isDragging = false;
         this.lastMouseX = 0;
         this.lastMouseY = 0;
         
-        this.year = 2024; // Default year
+        // Current year for data
+        this.year = 2024;
         
+        // Add canvas to DOM and set up events
         document.querySelector("#app").appendChild(this.#canvas);
-        this.setupEventListeners();
+        this.#setupEventListeners();
+        
+        // Initial render
+        this.updateChunks();
+    }
+
+    getCanvas() {
+        return this.#canvas
     }
     
-    setupEventListeners() {
-        this.#canvas.addEventListener('wheel', this.wheel.bind(this));
-        this.#canvas.addEventListener('mousedown', this.mousedown.bind(this));
-        this.#canvas.addEventListener('mousemove', this.mousemove.bind(this));
-        this.#canvas.addEventListener('mouseup', this.mouseup.bind(this));
-        this.#canvas.addEventListener('mouseleave', this.mouseleave.bind(this));
+    #calculateChunks() {
+        const viewportWidth = this.#canvas.width * this.metersPerPixel;
+        const viewportHeight = this.#canvas.height * this.metersPerPixel;
+        
+        // Calculate grid size based on viewport dimensions
+        const chunksPerRow = Math.ceil(viewportWidth / (viewportWidth / 3));
+        const chunksPerCol = Math.ceil(viewportHeight / (viewportHeight / 3));
+        
+        const latDelta = (this.rightBottom[0] - this.leftTop[0]) / chunksPerCol;
+        const lonDelta = (this.rightBottom[1] - this.leftTop[1]) / chunksPerRow;
+        
+        const chunks = [];
+        
+        for (let i = 0; i < chunksPerCol; i++) {
+            for (let j = 0; j < chunksPerRow; j++) {
+                const chunkLeftTop = [
+                    this.leftTop[0] + i * latDelta,
+                    this.leftTop[1] + j * lonDelta
+                ];
+                
+                const chunkRightBottom = [
+                    chunkLeftTop[0] + latDelta,
+                    chunkLeftTop[1] + lonDelta
+                ];
+                
+                const chunkCenter = [
+                    (chunkLeftTop[0] + chunkRightBottom[0]) / 2,
+                    (chunkLeftTop[1] + chunkRightBottom[1]) / 2
+                ];
+                
+                chunks.push({
+                    leftTop: chunkLeftTop,
+                    rightBottom: chunkRightBottom,
+                    center: chunkCenter
+                });
+            }
+        }
+        
+        return chunks;
     }
     
     async updateChunks() {
-        const chunkGrid = calculateChunkGrid(this.center, this.leftTop, this.rightBottom);
-        const zoomLevel = calculateZoomLevel(this.leftTop, this.rightBottom);
-        
-        const newChunks = await Promise.all(
-            chunkGrid.map(async chunkBounds => {
-                try {
-                    const zones = await fetchChunkData(chunkBounds, this.year);
-                    return new Chunk(zones, chunkBounds.leftTop, chunkBounds.rightBottom, chunkBounds.center);
-                } catch (error) {
-                    console.error('Failed to fetch chunk:', error);
-                    return null;
-                }
-            })
-        );
-        
-        this.#chunks = newChunks.filter(chunk => chunk !== null);
-        this.draw();
-    }
-    
-    clear() {
-        const ctx = this.#canvas.getContext('2d');
-        ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
-    }
-    
-    draw() {
-        this.clear();
-        
-        for (const chunk of this.#chunks) {
-            for (const zone of chunk.zones) {
-                const style = new Style(zone.color || [100, 149, 237], zone.intensity || 0.5);
-                drawPolygonToCanvas(
-                    this.#canvas,
-                    zone.coords,
+        try {
+            // Calculate chunks based on current viewport
+            const chunkGrid = this.#calculateChunks();
+            
+            // Fetch data for each chunk
+            const fetchPromises = chunkGrid.map(chunk => 
+                this.#api.getLanguageZones({
+                    year: this.year,
+                    leftTop: chunk.leftTop,
+                    rightBottom: chunk.rightBottom
+                })
+            );
+            
+            const chunksData = await Promise.all(fetchPromises);
+            
+            // Create chunk objects with fetched data
+            this.#chunks = chunkGrid.map((chunk, index) => 
+                new Chunk(
+                    chunksData[index],
                     chunk.leftTop,
                     chunk.rightBottom,
                     chunk.center,
-                    style
-                );
-            }
+                    this.calculateZoomLevel()
+                )
+            );
+            
+            this.draw();
+        } catch (error) {
+            console.error('Failed to update chunks:', error);
         }
     }
     
-
-    wheel(e) {
+    calculateZoomLevel() {
+        const latSpan = Math.abs(this.rightBottom[0] - this.leftTop[0]);
+        return Math.floor(Math.log2(360 / latSpan));
+    }
+    
+    #setupEventListeners() {
+        this.#canvas.addEventListener('wheel', this.#handleWheel.bind(this));
+        this.#canvas.addEventListener('mousedown', this.#handleMouseDown.bind(this));
+        this.#canvas.addEventListener('mousemove', this.#handleMouseMove.bind(this));
+        this.#canvas.addEventListener('mouseup', this.#handleMouseUp.bind(this));
+        this.#canvas.addEventListener('mouseleave', this.#handleMouseLeave.bind(this));
+    }
+    
+    #handleWheel(e) {
         e.preventDefault();
         
-        const zoomIn = e.deltaY < 0;
+        const rect = this.#canvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
         
-        const factor = zoomIn ? 0.9 : 1.1;
+        // Convert mouse position to latlon before zoom
+        const mouseLatLon = pixelToLatLon(
+            [mouseX, mouseY],
+            [this.#canvas.width, this.#canvas.height],
+            this.leftTop,
+            this.rightBottom
+        );
         
-        const centerLat = (leftTop[0] + rightBottom[0]) / 2;
-        const centerLon = (leftTop[1] + rightBottom[1]) / 2;
+        // Update zoom level
+        const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
+        this.metersPerPixel *= zoomFactor;
         
-        const newLeftTop = [
-            centerLat + (leftTop[0] - centerLat) * factor,
-            centerLon + (leftTop[1] - centerLon) * factor
+        // Calculate new boundaries keeping mouse position fixed
+        const latDelta = this.rightBottom[0] - this.leftTop[0];
+        const lonDelta = this.rightBottom[1] - this.leftTop[1];
+        
+        this.leftTop = [
+            mouseLatLon[0] - (mouseX / this.#canvas.width) * latDelta * zoomFactor,
+            mouseLatLon[1] - (mouseY / this.#canvas.height) * lonDelta * zoomFactor
         ];
         
-        const newRightBottom = [
-            centerLat + (rightBottom[0] - centerLat) * factor,
-            centerLon + (rightBottom[1] - centerLon) * factor
+        this.rightBottom = [
+            this.leftTop[0] + latDelta * zoomFactor,
+            this.leftTop[1] + lonDelta * zoomFactor
         ];
-
-        leftTop = newLeftTop;
-        rightBottom = newRightBottom;
         
-        this.clear();
-        this.draw();
+        this.updateChunks();
     }
-
-    mousedown(e) {
+    
+    #handleMouseDown(e) {
         const rect = this.#canvas.getBoundingClientRect();
         this.lastMouseX = e.clientX - rect.left;
         this.lastMouseY = e.clientY - rect.top;
         this.isDragging = true;
+        this.#canvas.style.cursor = 'grabbing';
     }
-
-    mousemove(e) {
+    
+    #handleMouseMove(e) {
         if (!this.isDragging) return;
         
         const rect = this.#canvas.getBoundingClientRect();
@@ -458,34 +436,67 @@ export class Viewport {
         const dx = -(currentX - this.lastMouseX);
         const dy = -(currentY - this.lastMouseY);
         
-        const dlatlonDelta = pixelDeltaToLatLonDelta(dx, dy, canvas, leftTop, rightBottom);
+        const deltaLatLon = pixelDeltaToLatLonDelta(
+            dx, dy,
+            this.#canvas,
+            this.leftTop,
+            this.rightBottom
+        );
         
-        this.leftTop = addLatLonDelta(this.leftTop, dlatlonDelta);
-        this.rightBottom = addLatLonDelta(this.rightBottom, dlatlonDelta);
+        this.leftTop = addLatLonDelta(this.leftTop, deltaLatLon);
+        this.rightBottom = addLatLonDelta(this.rightBottom, deltaLatLon);
         
         this.lastMouseX = currentX;
         this.lastMouseY = currentY;
         
-        this.clear();
-        this.draw ();
+        this.updateChunks();
     }
-
-    getCanvas() {
-        return this.#canvas;
-    }
-
-    mouseup(e) {
+    
+    #handleMouseUp() {
         this.isDragging = false;
+        this.#canvas.style.cursor = 'grab';
     }
-
-    mouseleave(e) {
-        this.isDragging = false;
+    
+    #handleMouseLeave() {
+        if (this.isDragging) {
+            this.isDragging = false;
+            this.#canvas.style.cursor = 'grab';
+        }
+    }
+    
+    draw() {
+        const ctx = this.#canvas.getContext('2d');
+        ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+        
+        // Draw each chunk's zones
+        for (const chunk of this.#chunks) {
+            for (const zone of chunk.zones) {
+                if (!zone.coords || !zone.coords.length) continue;
+                
+                const style = new Style(zone.color || [100, 149, 237], zone.intensity);
+                
+                // Draw each polygon in the zone
+                zone.coords.forEach(coord => {
+                    if (coord.type === 'Polygon' && coord.coordinates && coord.coordinates[0]) {
+                        drawPolygonToCanvas(
+                            this.#canvas,
+                            coord.coordinates[0],
+                            chunk.leftTop,
+                            chunk.rightBottom,
+                            chunk.center,
+                            style
+                        );
+                    }
+                });
+            }
+        }
+    }
+    
+    setYear(year) {
+        this.year = year;
+        this.updateChunks();
     }
 }
 
-
-
-
-
-export default new Viewport();
-
+const viewport = new Viewport(800, 600);
+export default viewport;
