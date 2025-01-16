@@ -50,7 +50,6 @@ sudo docker compose up
 ```
 
 # Doc [AI GENERATED]
-
 ## Headers
 
 All requests should include the following headers:
@@ -61,7 +60,7 @@ Accept: application/json
 ```
 
 ## Base URL
-`http://127.0.0.1:8080/api`
+`http://127.0.0.1:8081/api`
 
 ## Chunks API
 
@@ -76,8 +75,32 @@ GET /chunks
 **Curl Example:**
 ```bash
 curl -X GET \
-  'http://127.0.0.1:8080/api/chunks' \
+  'http://127.0.0.1:8081/api/chunks' \
   -H 'Accept: application/json'
+```
+
+**Example Response:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439011",
+    "languages_id": ["507f1f77bcf86cd799439012", "507f1f77bcf86cd799439013"],
+    "center": {
+      "type": "Point",
+      "coordinates": [14.41, 50.08]
+    },
+    "zoom_level": 5
+  },
+  {
+    "id": "507f1f77bcf86cd799439014",
+    "languages_id": ["507f1f77bcf86cd799439015"],
+    "center": {
+      "type": "Point",
+      "coordinates": [2.35, 48.85]
+    },
+    "zoom_level": 6
+  }
+]
 ```
 
 ### Get Specific Chunk
@@ -91,8 +114,21 @@ GET /chunks/{chunk_id}
 **Curl Example:**
 ```bash
 curl -X GET \
-  'http://127.0.0.1:8080/api/chunks/507f1f77bcf86cd799439011' \
+  'http://127.0.0.1:8081/api/chunks/507f1f77bcf86cd799439011' \
   -H 'Accept: application/json'
+```
+
+**Example Response:**
+```json
+{
+  "id": "507f1f77bcf86cd799439011",
+  "languages_id": ["507f1f77bcf86cd799439012", "507f1f77bcf86cd799439013"],
+  "center": {
+    "type": "Point",
+    "coordinates": [14.41, 50.08]
+  },
+  "zoom_level": 5
+}
 ```
 
 ### Create New Chunk
@@ -106,17 +142,30 @@ POST /chunk
 **Curl Example:**
 ```bash
 curl -X POST \
-  'http://127.0.0.1:8080/api/chunk' \
+  'http://127.0.0.1:8081/api/chunk' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
     "languages_id": ["507f1f77bcf86cd799439012"],
     "center": {
       "type": "Point",
-      "coordinates": [37.61, 55.75]
+      "coordinates": [14.41, 50.08]
     },
     "zoom_level": 5
   }'
+```
+
+**Example Response:**
+```json
+{
+  "id": "507f1f77bcf86cd799439016",
+  "languages_id": ["507f1f77bcf86cd799439012"],
+  "center": {
+    "type": "Point",
+    "coordinates": [14.41, 50.08]
+  },
+  "zoom_level": 5
+}
 ```
 
 ## Language Zones API
@@ -126,14 +175,42 @@ Retrieves all language zones for a specific year.
 
 **Endpoint:**
 ```http
-GET //all/{year}
+GET /all/{year}
 ```
 
 **Curl Example:**
 ```bash
 curl -X GET \
-  'http://127.0.0.1:8080/api//all/2024' \
+  'http://127.0.0.1:8081/api/all/2024' \
   -H 'Accept: application/json'
+```
+
+**Example Response:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439020",
+    "coords": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [14.41, 50.08],
+            [14.42, 50.08],
+            [14.42, 50.07],
+            [14.41, 50.07],
+            [14.41, 50.08]
+          ]
+        ]
+      }
+    ],
+    "description": "Urban dialect zone A",
+    "name": "Zone A",
+    "intensity": 0.75,
+    "color": [255, 128, 0],
+    "year": 2024
+  }
+]
 ```
 
 ### Get Language Zones Within Bounding Box
@@ -147,13 +224,41 @@ GET /areas/{year}
 **Curl Example:**
 ```bash
 curl -X GET \
-  'http://127.0.0.1:8080/api/areas/2024' \
+  'http://127.0.0.1:8081/api/areas/2024' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
-    "leftTopPointLatLon": [55.75, 37.61],
-    "rightBottomPointLatLon": [55.70, 37.66]
+    "leftTopPointLatLon": [50.08, 14.41],
+    "rightBottomPointLatLon": [50.07, 14.42]
   }'
+```
+
+**Example Response:**
+```json
+[
+  {
+    "id": "507f1f77bcf86cd799439020",
+    "coords": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [14.41, 50.08],
+            [14.42, 50.08],
+            [14.42, 50.07],
+            [14.41, 50.07],
+            [14.41, 50.08]
+          ]
+        ]
+      }
+    ],
+    "description": "Historical dialect area B",
+    "name": "Zone B",
+    "intensity": 0.75,
+    "color": [255, 128, 0],
+    "year": 2024
+  }
+]
 ```
 
 ### Get Specific Language Zone
@@ -167,8 +272,34 @@ GET /area/{area_id}
 **Curl Example:**
 ```bash
 curl -X GET \
-  'http://127.0.0.1:8080/api/area/507f1f77bcf86cd799439011' \
+  'http://127.0.0.1:8081/api/area/507f1f77bcf86cd799439020' \
   -H 'Accept: application/json'
+```
+
+**Example Response:**
+```json
+{
+  "id": "507f1f77bcf86cd799439020",
+  "coords": [
+    {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [14.41, 50.08],
+          [14.42, 50.08],
+          [14.42, 50.07],
+          [14.41, 50.07],
+          [14.41, 50.08]
+        ]
+      ]
+    }
+  ],
+  "description": "Mixed dialect region C",
+  "name": "Zone C",
+  "intensity": 0.75,
+  "color": [255, 128, 0],
+  "year": 2024
+}
 ```
 
 ### Create New Language Zone
@@ -182,7 +313,7 @@ POST /area
 **Curl Example:**
 ```bash
 curl -X POST \
-  'http://127.0.0.1:8080/api/area' \
+  'http://127.0.0.1:8081/api/area' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
@@ -191,17 +322,17 @@ curl -X POST \
         "type": "Polygon",
         "coordinates": [
           [
-            [37.61, 55.75],
-            [37.62, 55.75],
-            [37.62, 55.74],
-            [37.61, 55.74],
-            [37.61, 55.75]
+            [14.41, 50.08],
+            [14.42, 50.08],
+            [14.42, 50.07],
+            [14.41, 50.07],
+            [14.41, 50.08]
           ]
         ]
       }
     ],
-    "description": "Example language zone",
-    "name": "Example Zone",
+    "description": "New dialect zone",
+    "name": "Zone D",
     "intensity": 0.75,
     "color": [255, 128, 0],
     "year": 2024
@@ -219,7 +350,7 @@ PUT /area/{area_id}
 **Curl Example:**
 ```bash
 curl -X PUT \
-  'http://127.0.0.1:8080/api/area/507f1f77bcf86cd799439011' \
+  'http://127.0.0.1:8081/api/area/507f1f77bcf86cd799439020' \
   -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
@@ -228,34 +359,64 @@ curl -X PUT \
         "type": "Polygon",
         "coordinates": [
           [
-            [37.61, 55.75],
-            [37.62, 55.75],
-            [37.62, 55.74],
-            [37.61, 55.74],
-            [37.61, 55.75]
+            [14.41, 50.08],
+            [14.42, 50.08],
+            [14.42, 50.07],
+            [14.41, 50.07],
+            [14.41, 50.08]
           ]
         ]
       }
     ],
-    "description": "Updated description",
-    "name": "Updated Zone",
+    "description": "Updated dialect zone",
+    "name": "Updated Zone D",
     "intensity": 0.8,
     "color": [255, 128, 0],
     "year": 2024
   }'
 ```
 
-## Response Status Codes
+## Error Responses
 
-- `200 OK`: Request successful
-- `400 Bad Request`: Invalid request parameters or body
-- `404 Not Found`: Resource not found
-- `500 Internal Server Error`: Server error
+### 400 Bad Request
+```json
+{
+  "timestamp": "2024-01-16T10:00:00.000+00:00",
+  "status": 400,
+  "error": "Bad Request",
+  "message": "Invalid bounding box coordinates"
+}
+```
+
+### 404 Not Found
+```json
+{
+  "timestamp": "2024-01-16T10:00:00.000+00:00",
+  "status": 404,
+  "error": "Not Found",
+  "message": "Language zone not found with id: 507f1f77bcf86cd799439020"
+}
+```
+
+### 500 Internal Server Error
+```json
+{
+  "timestamp": "2024-01-16T10:00:00.000+00:00",
+  "status": 500,
+  "error": "Internal Server Error",
+  "message": "An unexpected error occurred"
+}
+```
 
 ## Notes
 
-1. All IDs are in MongoDB ObjectId format
+1. All IDs are in MongoDB ObjectId format (24-character hexadecimal)
 2. GeoJSON coordinates are in [longitude, latitude] format
-3. The color array must contain exactly 3 integers (RGB values)
+3. The color array must contain exactly 3 integers (RGB values, 0-255)
 4. All requests return JSON responses
-5. Authentication headers may be required depending on your server configuration
+5. When creating or updating language zones, all fields are required
+6. The `intensity` value should be between 0 and 1
+7. For polygon coordinates, the first and last points must be identical to close the polygon
+8. Years should be provided as integers (e.g., 2024)
+9. Zoom levels typically range from 0 (most zoomed out) to 18 (most zoomed in)
+10. Bounding box coordinates must be provided in [latitude, longitude] format
