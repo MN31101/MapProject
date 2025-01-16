@@ -470,6 +470,10 @@ export class Viewport {
         this.draw ();
     }
 
+    getCanvas() {
+        return this.#canvas;
+    }
+
     mouseup(e) {
         this.isDragging = false;
     }
@@ -477,11 +481,7 @@ export class Viewport {
     mouseleave(e) {
         this.isDragging = false;
     }
-    
 }
-
-
-
 
 
 
