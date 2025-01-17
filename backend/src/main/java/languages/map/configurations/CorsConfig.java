@@ -1,4 +1,4 @@
-package languages.map;
+package languages.map.configurations;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
