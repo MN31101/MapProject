@@ -2,6 +2,8 @@ package languages.map.services;
 
 import org.locationtech.jts.geom.MultiPolygon;
 import org.locationtech.jts.operation.overlay.OverlayOp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.geo.Point;
 import languages.map.dto.BoundingBoxRequest;
 import languages.map.models.LanguagesZone;
@@ -21,16 +23,19 @@ import java.util.stream.Collectors;
 
 @Service
 public class LanguagesZoneService {
+    private static final Logger logger = LoggerFactory.getLogger(LanguagesZoneService.class);
     private final LanguagesZoneRepository languagesZoneRepository;
 
     public LanguagesZoneService(LanguagesZoneRepository languagesZoneRepository) {
         this.languagesZoneRepository = languagesZoneRepository;
     }
 
-
     public List<LanguagesZone> getLanguagesZone(@NotNull BoundingBoxRequest boundingBoxRequest, Integer year) {
+        logger.info("Fetching languages zones for year: {}", year);
         final var boundingBox = getBoundingBox(boundingBoxRequest);
         List<LanguagesZone> zones = getLanguagesZoneByYear(year);
+
+        logger.debug("Total zones found: {}", zones.size());
 
         return zones.stream()
                 .map(zone -> processZone(zone, boundingBox))
@@ -40,10 +45,13 @@ public class LanguagesZoneService {
 
     private LanguagesZone processZone(LanguagesZone zone, Geometry boundingBox) {
         try {
+            logger.info("Processing zone with id: {}", zone.getId());
             List<GeoJsonPolygon> clippedPolygons = clipPolygons(zone, boundingBox);
             zone.setCoords(clippedPolygons);
+            logger.debug("Clipped polygons for zone id {}: {}", zone.getId(), clippedPolygons.size());
             return zone;
         } catch (Exception e) {
+            logger.error("Error clipping geometry for zone: {}", zone.getId(), e);
             throw new RuntimeException("Error clipping geometry for zone: " + zone.getId(), e);
         }
     }
@@ -53,6 +61,7 @@ public class LanguagesZoneService {
         for (GeoJsonPolygon geoJsonPolygon : zone.getCoords()) {
             allPolygons.addAll(clipPolygon(geoJsonPolygon, boundingBox));  // Add the list of clipped polygons
         }
+        logger.debug("Clipped {} polygons for zone {}", allPolygons.size(), zone.getId());
         return allPolygons;
     }
 
@@ -76,17 +85,22 @@ public class LanguagesZoneService {
                         List<Point> newPoints = createCutPoints(zoneGeometry, poly);
                         polygons.add(new GeoJsonPolygon(newPoints));
                     }
+                    logger.debug("Created {} clipped polygons from multi-polygon", polygons.size());
                     return polygons;
                 } else {
                     List<Point> newPoints = createCutPoints(zoneGeometry, clippedGeometry);
+                    logger.debug("Created 1 clipped polygon");
                     return List.of(new GeoJsonPolygon(newPoints));
                 }
             }
+            logger.warn("Clipped geometry is empty for zone geometry");
             return List.of();
         } catch (Exception e) {
+            logger.error("Error processing geometry for polygon", e);
             throw new RuntimeException("Error processing geometry", e);
         }
     }
+
 
 
     private List<Point> createCutPoints(Geometry zoneGeometry, Geometry clippedGeometry) {
@@ -99,18 +113,21 @@ public class LanguagesZoneService {
 
         if (!newPoints.isEmpty()) {
             Point firstPoint = newPoints.get(0);
-            newPoints.add(firstPoint);
+            newPoints.add(firstPoint); // Ensure the polygon is closed
         }
 
+        logger.debug("Created {} cut points for clipped geometry", newPoints.size());
         return newPoints;
     }
 
 
     private String createWKT(GeoJsonPolygon geoJsonPolygon) {
-        return String.format("POLYGON((%s))",
+        String wkt = String.format("POLYGON((%s))",
                 geoJsonPolygon.getPoints().stream()
                         .map(p -> p.getX() + " " + p.getY())
                         .collect(Collectors.joining(", ")));
+        logger.debug("Generated WKT: {}", wkt);
+        return wkt;
     }
 
 
@@ -121,14 +138,16 @@ public class LanguagesZoneService {
         double y2 = boundingBoxRequest.getRightBottomPointLatLon()[1];
 
         GeometryFactory geometryFactory = new GeometryFactory();
-
-        return geometryFactory.createPolygon(new Coordinate[]{
+        Geometry boundingBox = geometryFactory.createPolygon(new Coordinate[]{
                 new Coordinate(x1, y1),
                 new Coordinate(x1, y2),
                 new Coordinate(x2, y2),
                 new Coordinate(x2, y1),
                 new Coordinate(x1, y1)
         });
+
+        logger.debug("Created bounding box with coordinates: {}, {}", x1, y1);
+        return boundingBox;
     }
 
     /**
@@ -136,39 +155,58 @@ public class LanguagesZoneService {
      * @return return LanguagesZone`s body
      */
     public LanguagesZone getLanguageZoneById(ObjectId id) {
-        return languagesZoneRepository.findById(id).orElseThrow(() -> new RuntimeException("No areas by id: " + id));
+        logger.info("Fetching languages zone with id: {}", id);
+        return languagesZoneRepository.findById(id).orElseThrow(() -> {
+            logger.error("No languages zone found with id: {}", id);
+            return new RuntimeException("No areas by id: " + id);
+        });
     }
 
     /**
      * @param year year of areas
      * @return a list of Areas for specific year and map
      */
-    public List<LanguagesZone> getLanguagesZoneByYear(Integer year){
-        return languagesZoneRepository.findAllByYear(year).orElseThrow(() -> new RuntimeException("No areas by year: "+year));
+    public List<LanguagesZone> getLanguagesZoneByYear(Integer year) {
+        logger.info("Fetching languages zones for year: {}", year);
+        List<LanguagesZone> zones = languagesZoneRepository.findAllByYear(year)
+                .orElseThrow(() -> {
+                    logger.error("No languages zones found for year: {}", year);
+                    return new RuntimeException("No areas by year: " + year);
+                });
+        logger.debug("Total zones found for year {}: {}", year, zones.size());
+        return zones;
     }
 
     /**
      * @param languagesZone body of new LanguagesZone.
      * @return return into repository new LanguagesZone body to create new LanguagesZone
      */
-    public LanguagesZone saveLanguageZone(LanguagesZone languagesZone){
-        return languagesZoneRepository.save(languagesZone);
+    public LanguagesZone saveLanguageZone(LanguagesZone languagesZone) {
+        logger.info("Saving new languages zone: {}", languagesZone);
+        LanguagesZone savedZone = languagesZoneRepository.save(languagesZone);
+        logger.info("Successfully saved languages zone with id: {}", savedZone.getId());
+        return savedZone;
     }
-
     public LanguagesZone updateLanguageZone(ObjectId id, LanguagesZone newLanguagesZone) {
+        logger.info("Updating languages zone with id: {}", id);
         return languagesZoneRepository.findById(id).map(area -> {
+            logger.debug("Found existing zone, updating it");
             area.setName(newLanguagesZone.getName());
             area.setDescription(newLanguagesZone.getDescription());
             area.setCoords(newLanguagesZone.getCoords());
             area.setIntensity(newLanguagesZone.getIntensity());
             area.setColor(newLanguagesZone.getColor());
             area.setYear(newLanguagesZone.getYear());
-            return languagesZoneRepository.save(area);
+            LanguagesZone updatedZone = languagesZoneRepository.save(area);
+            logger.info("Successfully updated languages zone with id: {}", updatedZone.getId());
+            return updatedZone;
         }).orElseGet(() -> {
+            logger.warn("No existing zone found, creating new one");
             newLanguagesZone.setId(id);
-            return languagesZoneRepository.save(newLanguagesZone);
+            LanguagesZone createdZone = languagesZoneRepository.save(newLanguagesZone);
+            logger.info("Successfully created languages zone with id: {}", createdZone.getId());
+            return createdZone;
         });
     }
-
 
 }
