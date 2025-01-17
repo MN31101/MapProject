@@ -3,7 +3,7 @@ import viewport from "./viewport/index.js";
 
 window.addEventListener("load", () => {
     
-    let canvas = view.getCanvas();
+    let canvas = viewport.getCanvas();
     document.querySelector("#app").appendChild(canvas)
 });
 

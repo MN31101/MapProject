@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping("/api")
+@CrossOrigin(origins = {"http://127.0.0.1:8000", "http://localhost:8000"})
 @RestController
 public class LanguagesZoneController {
     private final LanguagesZoneService languagesZoneService;

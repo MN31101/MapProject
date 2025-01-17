@@ -4,7 +4,7 @@ export class MapAPI {
      * Creates a new instance of MapAPI
      * @param {string} baseUrl - Base URL for the API (e.g., 'http://127.0.0.1:8081/api')
      */
-    constructor(baseUrl) {
+    constructor(baseUrl = 'http://127.0.0.1:8081/api') {
         this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash if present
         this.headers = {
             'Content-Type': 'application/json',
@@ -173,15 +173,19 @@ export class MapAPI {
             throw new Error('Bounding box coordinates must be arrays');
         }
 
+        // Construct the body of the request
         const body = {
             leftTopPointLatLon: leftTop,
             rightBottomPointLatLon: rightBottom
         };
 
         const response = await fetch(`${this.baseUrl}/areas/${year}`, {
-            method: 'GET',
-            headers: this.headers,
-            body: JSON.stringify(body)
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',  // Ensure Content-Type is set to application/json
+                ...this.headers
+            },
+            body: JSON.stringify(body),  // Send the body as JSON
         });
 
         if (!response.ok) {
@@ -190,6 +194,7 @@ export class MapAPI {
 
         return await response.json();
     }
+
 
     /**
      * Creates a new language zone
