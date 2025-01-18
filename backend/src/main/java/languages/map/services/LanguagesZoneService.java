@@ -182,6 +182,9 @@ public class LanguagesZoneService {
      * @return return into repository new LanguagesZone body to create new LanguagesZone
      */
     public LanguagesZone saveLanguageZone(LanguagesZone languagesZone) {
+        if (languagesZone.getId() == null) {
+            languagesZone.setId(new ObjectId()); // Ensure an ID is set before saving
+        }
         logger.info("Saving new languages zone: {}", languagesZone);
         LanguagesZone savedZone = languagesZoneRepository.save(languagesZone);
         logger.info("Successfully saved languages zone with id: {}", savedZone.getId());

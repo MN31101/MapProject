@@ -14,12 +14,12 @@ import java.util.List;
 @Document(collection = "languagesZone")
 public class LanguagesZone {
     @Id
-    ObjectId id;
+    private ObjectId id;
     @JsonSerialize(using = GeoJsonPolygonListSerializer.class)
-    List<GeoJsonPolygon> coords;
-    String description;
-    String name;
-    Double intensity;
-    Integer[] color = new Integer[3];
-    Integer year;
+    private List<GeoJsonPolygon> coords;
+    private String description;
+    private String name;
+    private Double intensity;
+    private Integer[] color = new Integer[3];
+    private Integer year;
 }

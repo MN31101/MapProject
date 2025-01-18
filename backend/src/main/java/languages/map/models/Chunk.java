@@ -10,8 +10,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "chunk")
 public class Chunk {
     @Id
-    ObjectId id;
-    ObjectId[] languages_id;
-    GeoJsonPoint center;
-    Integer zoom_level;
+    private ObjectId id;
+    private ObjectId[] languages_id;
+    private GeoJsonPoint center;
+    private Integer zoom_level;
 }

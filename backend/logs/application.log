@@ -1,27 +1,245 @@
-2025-01-17 19:46:19.811 [main] INFO  languages.map.MapApplication - Starting MapApplication using Java 17.0.9 with PID 4112 (C:\Projects\Map\backend\build\classes\java\main started by Mykyta in C:\Projects\Map\backend)
-2025-01-17 19:46:19.820 [main] DEBUG languages.map.MapApplication - Running with Spring Boot v3.4.0, Spring v6.2.0
-2025-01-17 19:46:19.822 [main] INFO  languages.map.MapApplication - No active profile set, falling back to 1 default profile: "default"
-2025-01-17 19:46:21.548 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2025-01-17 19:46:21.680 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 116 ms. Found 2 MongoDB repository interfaces.
-2025-01-17 19:46:47.962 [main] INFO  o.s.t.context.aot.TestClassScanner - Scanning for Spring test classes in all packages in classpath roots [C:\Projects\Map\backend\build\classes\java\test]
-2025-01-17 19:46:48.777 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-01-17 19:46:48.962 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
-2025-01-17 19:46:49.962 [main] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 12156 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
-2025-01-17 19:46:49.963 [main] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
-2025-01-17 19:46:49.965 [main] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
-2025-01-17 19:46:51.526 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2025-01-17 19:46:51.644 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 104 ms. Found 2 MongoDB repository interfaces.
-2025-01-17 19:46:55.807 [main] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 12156 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
-2025-01-17 19:46:55.807 [main] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
-2025-01-17 19:46:55.808 [main] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
-2025-01-17 19:47:13.028 [Test worker] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-01-17 19:47:13.315 [Test worker] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
-2025-01-17 19:47:14.191 [Test worker] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 17644 (started by Mykyta in C:\Projects\Map\backend)
-2025-01-17 19:47:14.192 [Test worker] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
-2025-01-17 19:47:14.194 [Test worker] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
-2025-01-17 19:47:16.024 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
-2025-01-17 19:47:16.180 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 139 ms. Found 2 MongoDB repository interfaces.
-2025-01-17 19:47:17.124 [cluster-ClusterId{value='678a97a5fd2ff658b168276a', description='null'}-srv-cluster0.gnh8e.mongodb.net] INFO  org.mongodb.driver.cluster - Adding discovered server cluster0-shard-00-00.gnh8e.mongodb.net:27017 to client view of cluster
-2025-01-17 19:47:17.175 [Test worker] INFO  org.mongodb.driver.client - MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "4.11.2"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/GraalVM Community/17.0.9+9-jvmci-23.0-b22"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='nktpedko', source='admin', password=<hidden>, mechanismProperties=<hidden>}, transportSettings=null, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@52a7928a, com.mongodb.Jep395RecordCodecProvider@563ccd31, com.mongodb.KotlinCodecProvider@72465eb2]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[127.0.0.1:27017], srvHost=cluster0.gnh8e.mongodb.net, srvServiceName=mongodb, mode=MULTIPLE, requiredClusterType=REPLICA_SET, requiredReplicaSetName='atlas-7rr5hv-shard-0', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=true, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
-2025-01-17 19:47:17.191 [cluster-ClusterId{value='678a97a5fd2ff658b168276a', description='null'}-srv-cluster0.gnh8e.mongodb.net] INFO  org.mongodb.driver.cluster - Adding discovered server cluster0-shard-00-02.gnh8e.mongodb.net:27017 to client view of cluster
-2025-01-17 19:47:17.197 [cluster-ClusterId{value='678a97a5fd2ff658b168276a', description='null'}-srv-cluster0.gnh8e.mongodb.net] INFO  org.mongodb.driver.cluster - Adding discovered server cluster0-shard-00-01.gnh8e.mongodb.net:27017 to client view of cluster
+2025-01-18 06:41:01.430 [main] INFO  o.s.t.context.aot.TestClassScanner - Scanning for Spring test classes in all packages in classpath roots [C:\Projects\Map\backend\build\classes\java\test]
+2025-01-18 06:41:02.408 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-18 06:41:02.627 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
+2025-01-18 06:41:03.665 [main] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 16612 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:41:03.667 [main] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:41:03.669 [main] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:41:05.751 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-01-18 06:41:05.919 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 149 ms. Found 2 MongoDB repository interfaces.
+2025-01-18 06:41:19.118 [main] INFO  o.s.t.context.aot.TestClassScanner - Scanning for Spring test classes in all packages in classpath roots [C:\Projects\Map\backend\build\classes\java\test]
+2025-01-18 06:41:19.904 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-18 06:41:20.094 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
+2025-01-18 06:41:20.930 [main] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 24392 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:41:20.931 [main] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:41:20.932 [main] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:41:22.511 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-01-18 06:41:22.645 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 117 ms. Found 2 MongoDB repository interfaces.
+2025-01-18 06:41:26.399 [main] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 24392 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:41:26.400 [main] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:41:26.401 [main] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:41:31.208 [Test worker] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 21360 (started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:41:31.213 [Test worker] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:41:31.215 [Test worker] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:41:35.181 [Test worker] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-01-18 06:41:35.476 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: URL [file:/C:/Projects/Map/client/index.html]
+2025-01-18 06:41:36.045 [Test worker] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-01-18 06:41:36.612 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2025-01-18 06:41:36.614 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2025-01-18 06:41:36.619 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 5 ms
+2025-01-18 06:41:36.769 [Test worker] INFO  l.map.controller.ControllersTest - Started ControllersTest in 6.222 seconds (process running for 8.655)
+2025-01-18 06:41:37.220 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/chunk
+2025-01-18 06:41:37.246 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/chunk
+2025-01-18 06:41:37.443 [Test worker] INFO  l.map.controllers.ChunkController - Creating new chunk
+2025-01-18 06:41:37.444 [Test worker] DEBUG l.map.controllers.ChunkController - Chunk data: Chunk(id=678b3100acc0ba34613c89c2, languages_id=[678b3100acc0ba34613c89c3], center=Point [x=10.000000, y=20.000000], zoom_level=5)
+2025-01-18 06:41:37.481 [Test worker] INFO  l.map.controllers.ChunkController - Successfully created chunk with id: 678b3100acc0ba34613c89c2
+2025-01-18 06:41:37.531 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:37.729 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:41:37.730 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:41:37.750 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:41:37.751 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@67c2b55d
+2025-01-18 06:41:37.752 [Test worker] ERROR l.m.c.LanguagesZoneController - Invalid bounding box coordinates provided
+2025-01-18 06:41:37.769 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:37.823 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/all/2024
+2025-01-18 06:41:37.825 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/all/2024
+2025-01-18 06:41:37.827 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching all language zones for year: 2024
+2025-01-18 06:41:37.833 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 1 zones for year 2024
+2025-01-18 06:41:37.870 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:37.930 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/chunks/678b3101acc0ba34613c89cb
+2025-01-18 06:41:37.931 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/chunks/678b3101acc0ba34613c89cb
+2025-01-18 06:41:37.951 [Test worker] INFO  l.map.controllers.ChunkController - Fetching chunk with id: 678b3101acc0ba34613c89cb
+2025-01-18 06:41:37.953 [Test worker] DEBUG l.map.controllers.ChunkController - Retrieved chunk: Chunk(id=678b3101acc0ba34613c89cb, languages_id=[678b3101acc0ba34613c89cc], center=Point [x=10.000000, y=20.000000], zoom_level=5)
+2025-01-18 06:41:37.957 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:38.014 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:41:38.016 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:41:38.020 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:41:38.020 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@666b91db
+2025-01-18 06:41:38.021 [Test worker] ERROR l.m.c.LanguagesZoneController - Invalid bounding box coordinates provided
+2025-01-18 06:41:38.048 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:38.086 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/area/678b3102acc0ba34613c89d3
+2025-01-18 06:41:38.087 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/area/678b3102acc0ba34613c89d3
+2025-01-18 06:41:38.109 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:38.152 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/chunks
+2025-01-18 06:41:38.153 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/chunks
+2025-01-18 06:41:38.155 [Test worker] INFO  l.map.controllers.ChunkController - Fetching all chunks
+2025-01-18 06:41:38.157 [Test worker] DEBUG l.map.controllers.ChunkController - Retrieved 1 chunks
+2025-01-18 06:41:38.160 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:38.195 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:41:38.197 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:41:38.204 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:41:38.205 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@305289b3
+2025-01-18 06:41:38.206 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 1 zones
+2025-01-18 06:41:38.209 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:38.239 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/area
+2025-01-18 06:41:38.240 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/area
+2025-01-18 06:41:38.249 [Test worker] INFO  l.m.c.LanguagesZoneController - Creating new language zone
+2025-01-18 06:41:38.250 [Test worker] DEBUG l.m.c.LanguagesZoneController - Language zone data: LanguagesZone(id=678b3102acc0ba34613c89dc, coords=[Polygon: [Point [x=0.000000, y=0.000000],Point [x=0.000000, y=1.000000],Point [x=1.000000, y=1.000000],Point [x=1.000000, y=0.000000],Point [x=0.000000, y=0.000000]]], description=Test Description, name=Test Zone, intensity=0.8, color=[255, 0, 0], year=2024)
+2025-01-18 06:41:38.293 [Test worker] INFO  l.m.c.LanguagesZoneController - Successfully created language zone with id: 678b3102acc0ba34613c89dc
+2025-01-18 06:41:38.297 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:41:38.337 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing PUT /api/area/678b3102acc0ba34613c89df
+2025-01-18 06:41:38.339 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured PUT /api/area/678b3102acc0ba34613c89df
+2025-01-18 06:41:38.346 [Test worker] INFO  l.m.c.LanguagesZoneController - Updating language zone with id: 678b3102acc0ba34613c89df
+2025-01-18 06:41:38.347 [Test worker] DEBUG l.m.c.LanguagesZoneController - Updated language zone data: LanguagesZone(id=678b3102acc0ba34613c89df, coords=[Polygon: [Point [x=0.000000, y=0.000000],Point [x=0.000000, y=1.000000],Point [x=1.000000, y=1.000000],Point [x=1.000000, y=0.000000],Point [x=0.000000, y=0.000000]]], description=Test Description, name=Test Zone, intensity=0.8, color=[255, 0, 0], year=2024)
+2025-01-18 06:41:38.354 [Test worker] INFO  l.m.c.LanguagesZoneController - Successfully updated language zone with id: 678b3102acc0ba34613c89df
+2025-01-18 06:41:38.359 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:21.415 [main] INFO  o.s.t.context.aot.TestClassScanner - Scanning for Spring test classes in all packages in classpath roots [C:\Projects\Map\backend\build\classes\java\test]
+2025-01-18 06:45:22.406 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-18 06:45:22.689 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
+2025-01-18 06:45:23.992 [main] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 20328 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:45:23.993 [main] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:45:23.995 [main] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:45:25.720 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-01-18 06:45:25.870 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 134 ms. Found 2 MongoDB repository interfaces.
+2025-01-18 06:45:29.208 [main] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 20328 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:45:29.208 [main] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:45:29.209 [main] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:45:42.515 [Test worker] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 25308 (started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:45:42.521 [Test worker] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:45:42.522 [Test worker] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:45:46.554 [Test worker] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-01-18 06:45:46.768 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: URL [file:/C:/Projects/Map/client/index.html]
+2025-01-18 06:45:47.297 [Test worker] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-01-18 06:45:47.815 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2025-01-18 06:45:47.816 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2025-01-18 06:45:47.818 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 2 ms
+2025-01-18 06:45:47.886 [Test worker] INFO  l.map.controller.ControllersTest - Started ControllersTest in 6.117 seconds (process running for 9.024)
+2025-01-18 06:45:48.239 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/chunk
+2025-01-18 06:45:48.264 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/chunk
+2025-01-18 06:45:48.416 [Test worker] INFO  l.map.controllers.ChunkController - Creating new chunk
+2025-01-18 06:45:48.416 [Test worker] DEBUG l.map.controllers.ChunkController - Chunk data: Chunk(id=678b31fb121990049d79f401, languages_id=[678b31fb121990049d79f402], center=Point [x=10.000000, y=20.000000], zoom_level=5)
+2025-01-18 06:45:48.446 [Test worker] INFO  l.map.controllers.ChunkController - Successfully created chunk with id: 678b31fb121990049d79f401
+2025-01-18 06:45:48.496 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:48.677 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:45:48.678 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:45:48.698 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:45:48.699 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@565a6af
+2025-01-18 06:45:48.700 [Test worker] ERROR l.m.c.LanguagesZoneController - Invalid bounding box coordinates provided
+2025-01-18 06:45:48.714 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:48.757 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/all/2024
+2025-01-18 06:45:48.758 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/all/2024
+2025-01-18 06:45:48.760 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching all language zones for year: 2024
+2025-01-18 06:45:48.764 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 1 zones for year 2024
+2025-01-18 06:45:48.790 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:48.841 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/chunks/678b31fc121990049d79f40a
+2025-01-18 06:45:48.844 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/chunks/678b31fc121990049d79f40a
+2025-01-18 06:45:48.856 [Test worker] INFO  l.map.controllers.ChunkController - Fetching chunk with id: 678b31fc121990049d79f40a
+2025-01-18 06:45:48.858 [Test worker] DEBUG l.map.controllers.ChunkController - Retrieved chunk: Chunk(id=678b31fc121990049d79f40a, languages_id=[678b31fc121990049d79f40b], center=Point [x=10.000000, y=20.000000], zoom_level=5)
+2025-01-18 06:45:48.862 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:48.898 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:45:48.899 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:45:48.904 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:45:48.905 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@11a67420
+2025-01-18 06:45:48.906 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 0 zones
+2025-01-18 06:45:48.909 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:48.945 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/area/678b31fc121990049d79f412
+2025-01-18 06:45:48.947 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/area/678b31fc121990049d79f412
+2025-01-18 06:45:48.958 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:48.983 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/chunks
+2025-01-18 06:45:48.984 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/chunks
+2025-01-18 06:45:48.986 [Test worker] INFO  l.map.controllers.ChunkController - Fetching all chunks
+2025-01-18 06:45:48.987 [Test worker] DEBUG l.map.controllers.ChunkController - Retrieved 1 chunks
+2025-01-18 06:45:48.990 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:49.015 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:45:49.016 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:45:49.018 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:45:49.019 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@3c116f26
+2025-01-18 06:45:49.020 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 1 zones
+2025-01-18 06:45:49.022 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:49.041 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/area
+2025-01-18 06:45:49.042 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/area
+2025-01-18 06:45:49.048 [Test worker] INFO  l.m.c.LanguagesZoneController - Creating new language zone
+2025-01-18 06:45:49.049 [Test worker] DEBUG l.m.c.LanguagesZoneController - Language zone data: LanguagesZone(id=678b31fd121990049d79f41b, coords=[Polygon: [Point [x=0.000000, y=0.000000],Point [x=0.000000, y=1.000000],Point [x=1.000000, y=1.000000],Point [x=1.000000, y=0.000000],Point [x=0.000000, y=0.000000]]], description=Test Description, name=Test Zone, intensity=0.8, color=[255, 0, 0], year=2024)
+2025-01-18 06:45:49.066 [Test worker] INFO  l.m.c.LanguagesZoneController - Successfully created language zone with id: 678b31fd121990049d79f41b
+2025-01-18 06:45:49.068 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:45:49.088 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing PUT /api/area/678b31fd121990049d79f41e
+2025-01-18 06:45:49.090 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured PUT /api/area/678b31fd121990049d79f41e
+2025-01-18 06:45:49.095 [Test worker] INFO  l.m.c.LanguagesZoneController - Updating language zone with id: 678b31fd121990049d79f41e
+2025-01-18 06:45:49.095 [Test worker] DEBUG l.m.c.LanguagesZoneController - Updated language zone data: LanguagesZone(id=678b31fd121990049d79f41e, coords=[Polygon: [Point [x=0.000000, y=0.000000],Point [x=0.000000, y=1.000000],Point [x=1.000000, y=1.000000],Point [x=1.000000, y=0.000000],Point [x=0.000000, y=0.000000]]], description=Test Description, name=Test Zone, intensity=0.8, color=[255, 0, 0], year=2024)
+2025-01-18 06:45:49.099 [Test worker] INFO  l.m.c.LanguagesZoneController - Successfully updated language zone with id: 678b31fd121990049d79f41e
+2025-01-18 06:45:49.103 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:47:47.218 [main] INFO  languages.map.MapApplication - Starting MapApplication using Java 17.0.9 with PID 24496 (C:\Projects\Map\backend\build\classes\java\main started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:47:47.225 [main] DEBUG languages.map.MapApplication - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:47:47.226 [main] INFO  languages.map.MapApplication - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:47:49.684 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-01-18 06:47:49.831 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 128 ms. Found 2 MongoDB repository interfaces.
+2025-01-18 06:48:14.642 [main] INFO  o.s.t.context.aot.TestClassScanner - Scanning for Spring test classes in all packages in classpath roots [C:\Projects\Map\backend\build\classes\java\test]
+2025-01-18 06:48:15.314 [main] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-18 06:48:15.471 [main] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
+2025-01-18 06:48:16.114 [main] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 2168 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:48:16.114 [main] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:48:16.116 [main] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:48:17.214 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-01-18 06:48:17.309 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 85 ms. Found 2 MongoDB repository interfaces.
+2025-01-18 06:48:19.797 [main] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 2168 (C:\Projects\Map\backend\build\classes\java\test started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:48:19.798 [main] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:48:19.798 [main] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:48:30.569 [Test worker] INFO  o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [languages.map.MapApplicationTests]: MapApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-01-18 06:48:30.764 [Test worker] INFO  o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration languages.map.MapApplication for test class languages.map.MapApplicationTests
+2025-01-18 06:48:31.366 [Test worker] INFO  languages.map.MapApplicationTests - Starting MapApplicationTests using Java 17.0.9 with PID 13100 (started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:48:31.367 [Test worker] DEBUG languages.map.MapApplicationTests - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:48:31.368 [Test worker] INFO  languages.map.MapApplicationTests - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:48:32.627 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2025-01-18 06:48:32.739 [Test worker] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 99 ms. Found 2 MongoDB repository interfaces.
+2025-01-18 06:48:33.436 [Test worker] INFO  org.mongodb.driver.client - MongoClient with metadata {"driver": {"name": "mongo-java-driver|sync|spring-boot", "version": "4.11.2"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/GraalVM Community/17.0.9+9-jvmci-23.0-b22"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=MongoCredential{mechanism=null, userName='nktpedko', source='admin', password=<hidden>, mechanismProperties=<hidden>}, transportSettings=null, streamFactoryFactory=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, EnumCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@2a8dd942, com.mongodb.Jep395RecordCodecProvider@2322e56f, com.mongodb.KotlinCodecProvider@35025a0a]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[127.0.0.1:27017], srvHost=cluster0.gnh8e.mongodb.net, srvServiceName=mongodb, mode=MULTIPLE, requiredClusterType=REPLICA_SET, requiredReplicaSetName='atlas-7rr5hv-shard-0', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=true, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=JAVA_LEGACY, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null}
+2025-01-18 06:48:33.461 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-srv-cluster0.gnh8e.mongodb.net] INFO  org.mongodb.driver.cluster - Adding discovered server cluster0-shard-00-00.gnh8e.mongodb.net:27017 to client view of cluster
+2025-01-18 06:48:33.540 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-srv-cluster0.gnh8e.mongodb.net] INFO  org.mongodb.driver.cluster - Adding discovered server cluster0-shard-00-02.gnh8e.mongodb.net:27017 to client view of cluster
+2025-01-18 06:48:33.550 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-srv-cluster0.gnh8e.mongodb.net] INFO  org.mongodb.driver.cluster - Adding discovered server cluster0-shard-00-01.gnh8e.mongodb.net:27017 to client view of cluster
+2025-01-18 06:48:34.403 [Test worker] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-01-18 06:48:34.479 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-cluster0-shard-00-01.gnh8e.mongodb.net:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=cluster0-shard-00-01.gnh8e.mongodb.net:27017, type=REPLICA_SET_PRIMARY, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=532297000, setName='atlas-7rr5hv-shard-0', canonicalAddress=cluster0-shard-00-01.gnh8e.mongodb.net:27017, hosts=[cluster0-shard-00-02.gnh8e.mongodb.net:27017, cluster0-shard-00-01.gnh8e.mongodb.net:27017, cluster0-shard-00-00.gnh8e.mongodb.net:27017], passives=[], arbiters=[], primary='cluster0-shard-00-01.gnh8e.mongodb.net:27017', tagSet=TagSet{[Tag{name='availabilityZone', value='eun1-az2'}, Tag{name='diskState', value='READY'}, Tag{name='nodeType', value='ELECTABLE'}, Tag{name='provider', value='AWS'}, Tag{name='region', value='EU_NORTH_1'}, Tag{name='workloadType', value='OPERATIONAL'}]}, electionId=7fffffff00000000000000a4, setVersion=28, topologyVersion=TopologyVersion{processId=677c0f69eab39be594a1a429, counter=6}, lastWriteDate=Sat Jan 18 06:48:34 EET 2025, lastUpdateTimeNanos=304517413159900}
+2025-01-18 06:48:34.479 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-cluster0-shard-00-02.gnh8e.mongodb.net:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=cluster0-shard-00-02.gnh8e.mongodb.net:27017, type=REPLICA_SET_SECONDARY, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=532342100, setName='atlas-7rr5hv-shard-0', canonicalAddress=cluster0-shard-00-02.gnh8e.mongodb.net:27017, hosts=[cluster0-shard-00-02.gnh8e.mongodb.net:27017, cluster0-shard-00-01.gnh8e.mongodb.net:27017, cluster0-shard-00-00.gnh8e.mongodb.net:27017], passives=[], arbiters=[], primary='cluster0-shard-00-01.gnh8e.mongodb.net:27017', tagSet=TagSet{[Tag{name='availabilityZone', value='eun1-az3'}, Tag{name='diskState', value='READY'}, Tag{name='nodeType', value='ELECTABLE'}, Tag{name='provider', value='AWS'}, Tag{name='region', value='EU_NORTH_1'}, Tag{name='workloadType', value='OPERATIONAL'}]}, electionId=null, setVersion=28, topologyVersion=TopologyVersion{processId=677c1352bae4bb0124eaead6, counter=3}, lastWriteDate=Sat Jan 18 06:48:34 EET 2025, lastUpdateTimeNanos=304517413163100}
+2025-01-18 06:48:34.480 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-cluster0-shard-00-00.gnh8e.mongodb.net:27017] INFO  org.mongodb.driver.cluster - Monitor thread successfully connected to server with description ServerDescription{address=cluster0-shard-00-00.gnh8e.mongodb.net:27017, type=REPLICA_SET_SECONDARY, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=25, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=532313500, setName='atlas-7rr5hv-shard-0', canonicalAddress=cluster0-shard-00-00.gnh8e.mongodb.net:27017, hosts=[cluster0-shard-00-02.gnh8e.mongodb.net:27017, cluster0-shard-00-01.gnh8e.mongodb.net:27017, cluster0-shard-00-00.gnh8e.mongodb.net:27017], passives=[], arbiters=[], primary='cluster0-shard-00-01.gnh8e.mongodb.net:27017', tagSet=TagSet{[Tag{name='availabilityZone', value='eun1-az1'}, Tag{name='diskState', value='READY'}, Tag{name='nodeType', value='ELECTABLE'}, Tag{name='provider', value='AWS'}, Tag{name='region', value='EU_NORTH_1'}, Tag{name='workloadType', value='OPERATIONAL'}]}, electionId=null, setVersion=28, topologyVersion=TopologyVersion{processId=677c0cecad7c3a5d7b591be1, counter=4}, lastWriteDate=Sat Jan 18 06:48:34 EET 2025, lastUpdateTimeNanos=304517413163000}
+2025-01-18 06:48:34.491 [cluster-ClusterId{value='678b32a1868d707db0f02ecc', description='null'}-cluster0-shard-00-01.gnh8e.mongodb.net:27017] INFO  org.mongodb.driver.cluster - Discovered replica set primary cluster0-shard-00-01.gnh8e.mongodb.net:27017 with max election id 7fffffff00000000000000a4 and max set version 28
+2025-01-18 06:48:34.601 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: URL [file:/C:/Projects/Map/client/index.html]
+2025-01-18 06:48:34.978 [Test worker] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-01-18 06:48:35.445 [Test worker] INFO  languages.map.MapApplicationTests - Started MapApplicationTests in 4.467 seconds (process running for 6.659)
+2025-01-18 06:48:36.699 [Test worker] INFO  l.map.controller.ControllersTest - Starting ControllersTest using Java 17.0.9 with PID 13100 (started by Mykyta in C:\Projects\Map\backend)
+2025-01-18 06:48:36.699 [Test worker] DEBUG l.map.controller.ControllersTest - Running with Spring Boot v3.4.0, Spring v6.2.0
+2025-01-18 06:48:36.700 [Test worker] INFO  l.map.controller.ControllersTest - No active profile set, falling back to 1 default profile: "default"
+2025-01-18 06:48:37.285 [Test worker] INFO  o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2025-01-18 06:48:37.309 [Test worker] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping - Adding welcome page: URL [file:/C:/Projects/Map/client/index.html]
+2025-01-18 06:48:37.400 [Test worker] DEBUG o.s.s.web.DefaultSecurityFilterChain - Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-01-18 06:48:37.576 [Test worker] INFO  o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2025-01-18 06:48:37.577 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2025-01-18 06:48:37.580 [Test worker] INFO  o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2025-01-18 06:48:37.611 [Test worker] INFO  l.map.controller.ControllersTest - Started ControllersTest in 0.944 seconds (process running for 8.825)
+2025-01-18 06:48:37.824 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/chunk
+2025-01-18 06:48:37.841 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/chunk
+2025-01-18 06:48:37.958 [Test worker] INFO  l.map.controllers.ChunkController - Creating new chunk
+2025-01-18 06:48:37.959 [Test worker] DEBUG l.map.controllers.ChunkController - Chunk data: Chunk(id=678b32a5868d707db0f02ecd, languages_id=[678b32a5868d707db0f02ece], center=Point [x=10.000000, y=20.000000], zoom_level=5)
+2025-01-18 06:48:37.978 [Test worker] INFO  l.map.controllers.ChunkController - Successfully created chunk with id: 678b32a5868d707db0f02ecd
+2025-01-18 06:48:38.006 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.131 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/all/2024
+2025-01-18 06:48:38.132 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/all/2024
+2025-01-18 06:48:38.137 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching all language zones for year: 2024
+2025-01-18 06:48:38.139 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 1 zones for year 2024
+2025-01-18 06:48:38.150 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.172 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/chunks/678b32a6868d707db0f02ed3
+2025-01-18 06:48:38.173 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/chunks/678b32a6868d707db0f02ed3
+2025-01-18 06:48:38.182 [Test worker] INFO  l.map.controllers.ChunkController - Fetching chunk with id: 678b32a6868d707db0f02ed3
+2025-01-18 06:48:38.183 [Test worker] DEBUG l.map.controllers.ChunkController - Retrieved chunk: Chunk(id=678b32a6868d707db0f02ed3, languages_id=[678b32a6868d707db0f02ed4], center=Point [x=10.000000, y=20.000000], zoom_level=5)
+2025-01-18 06:48:38.185 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.197 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/area/678b32a6868d707db0f02ed8
+2025-01-18 06:48:38.198 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/area/678b32a6868d707db0f02ed8
+2025-01-18 06:48:38.205 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.217 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/chunks
+2025-01-18 06:48:38.217 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/chunks
+2025-01-18 06:48:38.218 [Test worker] INFO  l.map.controllers.ChunkController - Fetching all chunks
+2025-01-18 06:48:38.218 [Test worker] DEBUG l.map.controllers.ChunkController - Retrieved 1 chunks
+2025-01-18 06:48:38.220 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.234 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/areas/2024
+2025-01-18 06:48:38.234 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/areas/2024
+2025-01-18 06:48:38.245 [Test worker] INFO  l.m.c.LanguagesZoneController - Fetching language zones for year 2024 within bounding box
+2025-01-18 06:48:38.245 [Test worker] DEBUG l.m.c.LanguagesZoneController - Bounding box request: languages.map.dto.BoundingBoxRequest@78e34499
+2025-01-18 06:48:38.246 [Test worker] DEBUG l.m.c.LanguagesZoneController - Retrieved 1 zones
+2025-01-18 06:48:38.247 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.262 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing POST /api/area
+2025-01-18 06:48:38.263 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured POST /api/area
+2025-01-18 06:48:38.267 [Test worker] INFO  l.m.c.LanguagesZoneController - Creating new language zone
+2025-01-18 06:48:38.267 [Test worker] DEBUG l.m.c.LanguagesZoneController - Language zone data: LanguagesZone(id=678b32a6868d707db0f02ee1, coords=[Polygon: [Point [x=0.000000, y=0.000000],Point [x=0.000000, y=1.000000],Point [x=1.000000, y=1.000000],Point [x=1.000000, y=0.000000],Point [x=0.000000, y=0.000000]]], description=Test Description, name=Test Zone, intensity=0.8, color=[255, 0, 0], year=2024)
+2025-01-18 06:48:38.284 [Test worker] INFO  l.m.c.LanguagesZoneController - Successfully created language zone with id: 678b32a6868d707db0f02ee1
+2025-01-18 06:48:38.286 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-01-18 06:48:38.297 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Securing PUT /api/area/678b32a6868d707db0f02ee4
+2025-01-18 06:48:38.299 [Test worker] DEBUG o.s.security.web.FilterChainProxy - Secured PUT /api/area/678b32a6868d707db0f02ee4
+2025-01-18 06:48:38.302 [Test worker] INFO  l.m.c.LanguagesZoneController - Updating language zone with id: 678b32a6868d707db0f02ee4
+2025-01-18 06:48:38.302 [Test worker] DEBUG l.m.c.LanguagesZoneController - Updated language zone data: LanguagesZone(id=678b32a6868d707db0f02ee4, coords=[Polygon: [Point [x=0.000000, y=0.000000],Point [x=0.000000, y=1.000000],Point [x=1.000000, y=1.000000],Point [x=1.000000, y=0.000000],Point [x=0.000000, y=0.000000]]], description=Test Description, name=Test Zone, intensity=0.8, color=[255, 0, 0], year=2024)
+2025-01-18 06:48:38.305 [Test worker] INFO  l.m.c.LanguagesZoneController - Successfully updated language zone with id: 678b32a6868d707db0f02ee4
+2025-01-18 06:48:38.307 [Test worker] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
