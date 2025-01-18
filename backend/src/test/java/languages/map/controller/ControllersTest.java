@@ -31,18 +31,17 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {ChunkController.class, LanguagesZoneController.class})
-@ContextConfiguration(classes = {ControllersTest.TestConfig.class, SecurityConfig.class})  // Add SecurityConfig
+@ContextConfiguration(classes = {ControllersTest.TestConfig.class, SecurityConfig.class})
 public class ControllersTest {
 
     @Configuration
-    @ComponentScan(basePackages = "languages.map.controllers") // Add this
+    @ComponentScan(basePackages = "languages.map.controllers")
     static class TestConfig {
         @Bean
         public ChunkService chunkService() {
@@ -63,11 +62,7 @@ public class ControllersTest {
             return mapper;
         }
 
-
-
-
     }
-
 
     @Autowired
     private MockMvc mockMvc;
@@ -135,8 +130,6 @@ public class ControllersTest {
                 });
     }
 
-
-
     @Test
     void getAllChunks_ShouldReturnChunksList() throws Exception {
         when(chunkService.getChunks()).thenReturn(List.of(testChunk));
@@ -148,7 +141,6 @@ public class ControllersTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(testChunk.getId().toString()));
     }
-
 
     @Test
     void getChunkById_ShouldReturnChunk() throws Exception {
@@ -233,4 +225,33 @@ public class ControllersTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.id").value(testZone.getId().toString()));
     }
+ /*   @Test
+    void deleteLanguageZone_ShouldReturnOk() throws Exception {
+        // Mock the service method
+        doNothing().when(languagesZoneService).deleteLanguageZone(any(LanguagesZone.class));
+
+        mockMvc.perform(delete("/area")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\"}")) // Assuming the body contains the ID to delete
+                .andExpect(status().isOk());
+
+        // Verify that the service delete method was called
+        verify(languagesZoneService, times(1)).deleteLanguageZone(any(LanguagesZone.class));
+    }
+
+    @Test
+    void deleteLanguageZone_ShouldReturnInternalServerError_OnFailure() throws Exception {
+        // Mock the service method to throw an exception
+        doThrow(new RuntimeException("Delete failed")).when(languagesZoneService).deleteLanguageZone(any(LanguagesZone.class));
+
+        mockMvc.perform(delete("/api/area")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\": \"1\"}"))
+                .andExpect(status().isOk());
+
+        // Verify that the service delete method was called
+        verify(languagesZoneService, times(1)).deleteLanguageZone(any(LanguagesZone.class));
+    }
+
+  */
 }

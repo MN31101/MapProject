@@ -212,4 +212,7 @@ public class LanguagesZoneService {
         });
     }
 
+    public void deleteLanguageZone(LanguagesZone languageZone) {
+        this.languagesZoneRepository.delete(languageZone);
+    }
 }

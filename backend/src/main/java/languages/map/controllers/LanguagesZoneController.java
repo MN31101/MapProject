@@ -110,4 +110,18 @@ public class LanguagesZoneController {
             throw e;
         }
     }
+
+    @DeleteMapping("/area")
+    public ResponseEntity<LanguagesZone> deleteLanguageZone(@RequestBody LanguagesZone languageZone){
+        logger.info("Deleting language zone with id: {}", languageZone.getId());
+        logger.debug("Deleted language zone data: {}", languageZone);
+        try {
+            languagesZoneService.deleteLanguageZone(languageZone);
+            logger.info("Successfully delete language zone with id: {}", languageZone.getId());
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Failed to delete language zone with id: {}", languageZone.getId(), e);
+            throw e;
+        }
+    }
 }
