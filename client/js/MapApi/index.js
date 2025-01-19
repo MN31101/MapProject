@@ -2,10 +2,12 @@
 export class MapAPI {
     /**
      * Creates a new instance of MapAPI
-     * @param {string} baseUrl - Base URL for the API (e.g., 'http://127.0.0.1:8081/api')
+     * @param {string} baseUrl - Base URL for the API
      */
-    constructor(baseUrl = 'http://127.0.0.1:8081/api') {
+    constructor(baseUrl = 'http://127.0.0.1:8080/api') {
         this.baseUrl = baseUrl.replace(/\/$/, ''); // Remove trailing slash if present
+        this.baseUrl = 'http://127.0.0.1:8080/api'
+
         this.headers = {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
@@ -168,7 +170,6 @@ export class MapAPI {
      */
     async getLanguageZones({ year, leftTop, rightBottom }) {
         this._validateYear(year);
-        // Note: For bounding box, coordinates are [latitude, longitude]
         if (!Array.isArray(leftTop) || !Array.isArray(rightBottom)) {
             throw new Error('Bounding box coordinates must be arrays');
         }
@@ -192,7 +193,9 @@ export class MapAPI {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        return await response.json();
+        const res = await response.json(); 
+        console.log(res)
+        return res;
     }
 
 

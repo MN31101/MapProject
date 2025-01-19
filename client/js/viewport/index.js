@@ -252,14 +252,14 @@ export class Style {
 
 export class Viewport {
     #canvas;
-    #chunks = [];
+    #chunk = null;  
     #api;
     
     constructor(width, height, id = 'map-canvas') {
-        this.#api = new MapAPI('http://127.0.0.1:8081/api');
+        this.#api = new MapAPI('http://localhost:8080/api');
         
         // Initial viewport state
-        this.leftTop = [51, 14];          // Starting position
+        this.leftTop = [51, 14];          
         this.rightBottom = [50, 15];  
         this.center = [
             (this.leftTop[0] + this.rightBottom[0]) / 2,
@@ -267,8 +267,12 @@ export class Viewport {
         ];
         
         // Zoom state
-        this.metersPerPixel = 50;  // Initial zoom level
+        this.metersPerPixel = 50;
         
+        setInterval(() => {
+            this.updateChunks();
+        }, 20);
+
         // Canvas setup
         this.#canvas = document.createElement('canvas');
         this.#canvas.width = width;
@@ -280,97 +284,47 @@ export class Viewport {
         this.lastMouseX = 0;
         this.lastMouseY = 0;
         
-        // Current year for data
         this.year = 2024;
         
-        // Add canvas to DOM and set up events
         document.querySelector("#app").appendChild(this.#canvas);
         this.#setupEventListeners();
         
-        // Initial render
         this.updateChunks();
     }
 
     getCanvas() {
-        return this.#canvas
-    }
-    
-    #calculateChunks() {
-        const viewportWidth = this.#canvas.width * this.metersPerPixel;
-        const viewportHeight = this.#canvas.height * this.metersPerPixel;
-        
-        // Calculate grid size based on viewport dimensions
-        const chunksPerRow = Math.ceil(viewportWidth / (viewportWidth / 3));
-        const chunksPerCol = Math.ceil(viewportHeight / (viewportHeight / 3));
-        
-        const latDelta = (this.rightBottom[0] - this.leftTop[0]) / chunksPerCol;
-        const lonDelta = (this.rightBottom[1] - this.leftTop[1]) / chunksPerRow;
-        
-        const chunks = [];
-        
-        for (let i = 0; i < chunksPerCol; i++) {
-            for (let j = 0; j < chunksPerRow; j++) {
-                const chunkLeftTop = [
-                    this.leftTop[0] + i * latDelta,
-                    this.leftTop[1] + j * lonDelta
-                ];
-                
-                const chunkRightBottom = [
-                    chunkLeftTop[0] + latDelta,
-                    chunkLeftTop[1] + lonDelta
-                ];
-                
-                const chunkCenter = [
-                    (chunkLeftTop[0] + chunkRightBottom[0]) / 2,
-                    (chunkLeftTop[1] + chunkRightBottom[1]) / 2
-                ];
-                
-                chunks.push({
-                    leftTop: chunkLeftTop,
-                    rightBottom: chunkRightBottom,
-                    center: chunkCenter
-                });
-            }
-        }
-        
-        return chunks;
+        return this.#canvas;
     }
     
     async updateChunks() {
         try {
-            // Calculate chunks based on current viewport
-            const chunkGrid = this.#calculateChunks();
+            const chunksData = await this.#api.getLanguageZones({
+                year: this.year,
+                leftTop: this.leftTop,
+                rightBottom: this.rightBottom
+            });
             
-            // Fetch data for each chunk
-            const fetchPromises = chunkGrid.map(chunk => 
-                this.#api.getLanguageZones({
-                    year: this.year,
-                    leftTop: chunk.leftTop,
-                    rightBottom: chunk.rightBottom
-                })
-            );
-            
-            const chunksData = await Promise.all(fetchPromises);
-            
-            // Create chunk objects with fetched data
-            this.#chunks = chunkGrid.map((chunk, index) => 
-                new Chunk(
-                    chunksData[index],
-                    chunk.leftTop,
-                    chunk.rightBottom,
-                    chunk.center,
-                    this.calculateZoomLevel()
-                )
+            this.#chunk = new Chunk(
+                chunksData,
+                this.leftTop,
+                this.rightBottom,
+                this.center,
+                this.calculateZoomLevel()
             );
             
             this.draw();
         } catch (error) {
-            console.error('Failed to update chunks:', error);
+            console.error('Failed to update chunk:', error);
         }
     }
     
     calculateZoomLevel() {
         const latSpan = Math.abs(this.rightBottom[0] - this.leftTop[0]);
+        document.querySelector("#debug").textContent = `
+        lattitude span: ${latSpan}
+        right bottom: ${this.rightBottom}
+        left top: ${this.leftTop}
+        `;
         return Math.floor(Math.log2(360 / latSpan));
     }
     
@@ -381,49 +335,55 @@ export class Viewport {
         this.#canvas.addEventListener('mouseup', this.#handleMouseUp.bind(this));
         this.#canvas.addEventListener('mouseleave', this.#handleMouseLeave.bind(this));
     }
-    
+
+    #cropCoordinates(coords) {
+        const MIN_LAT = -90;
+        const MAX_LAT = 90;
+        const MIN_LON = -180;
+        const MAX_LON = 180;
+        
+        return [
+            Math.max(MIN_LAT, Math.min(MAX_LAT, coords[0])),
+            Math.max(MIN_LON, Math.min(MAX_LON, coords[1]))
+        ];
+    }
     #handleWheel(e) {
         e.preventDefault();
         
-        const rect = this.#canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
+        const MIN_METERS_PER_PIXEL = 0.1;
+        const MAX_METERS_PER_PIXEL = 6000;
         
-        // Convert mouse position to latlon before zoom
-        const mouseLatLon = pixelToLatLon(
-            [mouseX, mouseY],
-            [this.#canvas.width, this.#canvas.height],
-            this.leftTop,
-            this.rightBottom
-        );
+        const zoomFactor = e.deltaY > 0 ? 1.05 : 0.95;
+        const newMetersPerPixel = this.metersPerPixel * zoomFactor;
         
-        // Update zoom level
-        const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
-        this.metersPerPixel *= zoomFactor;
+        if (newMetersPerPixel < MIN_METERS_PER_PIXEL || newMetersPerPixel > MAX_METERS_PER_PIXEL) {
+            return;
+        }
         
-        // Calculate new boundaries keeping mouse position fixed
-        const latDelta = this.rightBottom[0] - this.leftTop[0];
-        const lonDelta = this.rightBottom[1] - this.leftTop[1];
+        this.metersPerPixel = newMetersPerPixel;
         
+        // Calculate current center
+        const centerLat = (this.leftTop[0] + this.rightBottom[0]) / 2;
+        const centerLon = (this.leftTop[1] + this.rightBottom[1]) / 2;
+        
+        // Calculate current spans
+        const latSpan = this.rightBottom[0] - this.leftTop[0];
+        const lonSpan = this.rightBottom[1] - this.leftTop[1];
+        
+        // Calculate new spans
+        const newLatSpan = latSpan * zoomFactor;
+        const newLonSpan = lonSpan * zoomFactor;
+        
+        // Update boundaries around the center
         this.leftTop = [
-            mouseLatLon[0] - (mouseX / this.#canvas.width) * latDelta * zoomFactor,
-            mouseLatLon[1] - (mouseY / this.#canvas.height) * lonDelta * zoomFactor
+            centerLat - (newLatSpan / 2),
+            centerLon - (newLonSpan / 2)
         ];
         
         this.rightBottom = [
-            this.leftTop[0] + latDelta * zoomFactor,
-            this.leftTop[1] + lonDelta * zoomFactor
+            centerLat + (newLatSpan / 2),
+            centerLon + (newLonSpan / 2)
         ];
-        
-        this.updateChunks();
-    }
-    
-    #handleMouseDown(e) {
-        const rect = this.#canvas.getBoundingClientRect();
-        this.lastMouseX = e.clientX - rect.left;
-        this.lastMouseY = e.clientY - rect.top;
-        this.isDragging = true;
-        this.#canvas.style.cursor = 'grabbing';
     }
     
     #handleMouseMove(e) {
@@ -433,8 +393,8 @@ export class Viewport {
         const currentX = e.clientX - rect.left;
         const currentY = e.clientY - rect.top;
         
-        const dx = -(currentX - this.lastMouseX);
-        const dy = -(currentY - this.lastMouseY);
+        const dx = -(currentX - this.lastMouseX) || 0;
+        const dy = -(currentY - this.lastMouseY) || 0;
         
         const deltaLatLon = pixelDeltaToLatLonDelta(
             dx, dy,
@@ -443,13 +403,25 @@ export class Viewport {
             this.rightBottom
         );
         
-        this.leftTop = addLatLonDelta(this.leftTop, deltaLatLon);
-        this.rightBottom = addLatLonDelta(this.rightBottom, deltaLatLon);
+        let newLeftTop = addLatLonDelta(this.leftTop, deltaLatLon);
+        let newRightBottom = addLatLonDelta(this.rightBottom, deltaLatLon);
+        
+        this.leftTop = this.#cropCoordinates(newLeftTop);
+        this.rightBottom = this.#cropCoordinates(newRightBottom);
         
         this.lastMouseX = currentX;
         this.lastMouseY = currentY;
         
-        this.updateChunks();
+        
+        this.draw(); // Redraw on drag without fetching new data
+    }
+
+    #handleMouseDown(e) {
+        const rect = this.#canvas.getBoundingClientRect();
+        this.lastMouseX = e.clientX - rect.left;
+        this.lastMouseY = e.clientY - rect.top;
+        this.isDragging = true;
+        this.#canvas.style.cursor = 'grabbing';
     }
     
     #handleMouseUp() {
@@ -468,22 +440,20 @@ export class Viewport {
         const ctx = this.#canvas.getContext('2d');
         ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
         
-        // Draw each chunk's zones
-        for (const chunk of this.#chunks) {
-            for (const zone of chunk.zones) {
+        if (this.#chunk) {
+            for (const zone of this.#chunk.zones) {
                 if (!zone.coords || !zone.coords.length) continue;
                 
                 const style = new Style(zone.color || [100, 149, 237], zone.intensity);
                 
-                // Draw each polygon in the zone
                 zone.coords.forEach(coord => {
                     if (coord.type === 'Polygon' && coord.coordinates && coord.coordinates[0]) {
                         drawPolygonToCanvas(
                             this.#canvas,
                             coord.coordinates[0],
-                            chunk.leftTop,
-                            chunk.rightBottom,
-                            chunk.center,
+                            this.#chunk.leftTop,
+                            this.#chunk.rightBottom,  
+                            this.#chunk.center,
                             style
                         );
                     }
