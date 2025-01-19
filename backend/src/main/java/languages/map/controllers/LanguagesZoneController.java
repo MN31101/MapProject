@@ -126,5 +126,17 @@ public class LanguagesZoneController {
                     .body("Failed to delete language zone");
         }
     }
-
+    @DeleteMapping("/areas/all")
+    public ResponseEntity<?> deleteAllLanguageZone(@RequestBody LanguagesZone languageZone) {
+        logger.info("Deleting language zone all");
+        try {
+            languagesZoneService.deleteAllLanguageZone();
+            logger.info("Successfully deleted all language zone");
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Failed to delete all language zone");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete all language zone");
+        }
+    }
 }

@@ -215,4 +215,8 @@ public class LanguagesZoneService {
     public void deleteLanguageZone(LanguagesZone languageZone) {
         this.languagesZoneRepository.delete(languageZone);
     }
+
+    public void deleteAllLanguageZone() {
+        this.languagesZoneRepository.deleteAll();
+    }
 }
