@@ -107,7 +107,7 @@ window.addEventListener("load", () => {
         const dy = -(currentY - lastY);
         
         const dlatlonDelta = pixelDeltaToLatLonDelta(dx, dy, canvas, leftTop, rightBottom);
-        
+    
         leftTop = addLatLonDelta(leftTop, dlatlonDelta);
         rightBottom = addLatLonDelta(rightBottom, dlatlonDelta);
         

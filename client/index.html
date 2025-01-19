@@ -4,42 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="keywords" content="gay porn">
     <meta name="author" content="Ihor && Mykyta">
     
-    <!-- CSS -->
     <link rel="stylesheet" href="css/index.css">
-    <title> Map </title>
+    <title>Language Map Explorer</title>
 </head>
 <body>
-    <style>
-        canvas {
-            border: 5px solid black;
-        }
-    </style>
-    <!-- Header -->
-    <header>
-        <nav>
-            <!-- Navigation content -->
-        </nav>
-    </header>
+    <div class="page-container">
+        <!-- Minimal Header -->
+        <header class="main-header">
+            <nav class="nav-container">
+                <div class="logo">Language Map Explorer</div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Map</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </nav>
+        </header>
 
-    <!-- Main content -->
-    <main>
-        <div id="app">
-        <input id="zoomLevel" type="number"> 
+        <!-- Main content -->
+        <main class="main-content">
+            <div id="app" class="map-container">
+                <!-- Canvas will be inserted here -->
+            </div>
+        </main>
+
+        <!-- Minimal Footer -->
+        <footer class="main-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    © 2024 Language Map Explorer
+                </div>
+                <div class="footer-section">
+                    Created by Ihor & Mykyta
+                </div>
+            </div>
+        </footer>
+
+        <!-- Debug panel moved outside main content -->
+        <div id="debug" class="debug-panel"></div>
     </div>
-    <code id="debug">
-    </code>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-    </footer>
 
     <!-- Scripts -->
     <script type="module" src="js/index.js"></script>
-    <script type="module" src="js/viewport/index.js"> </script>
-    <script type="module" src="js/MapApi/index.js"> </script>
+    <script type="module" src="js/viewport/index.js"></script>
+    <script type="module" src="js/MapApi/index.js"></script>
 </body>
 </html>

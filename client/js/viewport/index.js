@@ -30,17 +30,36 @@ Algorythm:
 
 
 
-
 export function latLonToMercator(point) {
     if (Array.isArray(point[0])) {
         return point.map(latLonToMercator);
     }
     
     const [lat, lon] = point;
+    const clampedLat = Math.max(-85, Math.min(85, lat));
+    
     const x = lon * Math.PI / 180;
-    const y = Math.log(Math.tan((90 + lat) * Math.PI / 360));
+    const y = Math.log(Math.tan((90 + clampedLat) * Math.PI / 360));
     return [x, y];
 }
+
+
+
+export function mercatorToScreen(mercatorPoint, viewportBounds, canvasSize) {
+    if (Array.isArray(mercatorPoint[0])) {
+        return mercatorPoint.map(p => mercatorToScreen(p, viewportBounds, canvasSize));
+    }
+    
+    const [x, y] = mercatorPoint;
+    const [leftX, topY] = latLonToMercator(viewportBounds.leftTop);
+    const [rightX, bottomY] = latLonToMercator(viewportBounds.rightBottom);
+    
+    const screenX = (x - leftX) / (rightX - leftX) * canvasSize[0];
+    const screenY = (y - topY) / (bottomY - topY) * canvasSize[1];
+    
+    return [screenX, screenY];
+}
+
 
 export function normalizeMercator(center, leftTop, rightBottom, mercatorPoint) {
     if (Array.isArray(mercatorPoint[0])) {
@@ -277,49 +296,134 @@ export class Style {
 
 
 
+function calculateMercatorAspectRatio(leftTop, rightBottom) {
+    // Get the height in Mercator coordinates
+    const topY = Math.log(Math.tan((90 + leftTop[0]) * Math.PI / 360));
+    const bottomY = Math.log(Math.tan((90 + rightBottom[0]) * Math.PI / 360));
+    const mercatorHeight = Math.abs(topY - bottomY);
+    
+    // Get the width in Mercator coordinates
+    const mercatorWidth = Math.abs(rightBottom[1] - leftTop[1]) * Math.PI / 180;
+    
+    return mercatorWidth / mercatorHeight;
+}
+
+function adjustViewportForAspectRatio(canvas, leftTop, rightBottom) {
+    const canvasAspectRatio = canvas.width / canvas.height;
+    const mercatorAspectRatio = calculateMercatorAspectRatio(leftTop, rightBottom);
+    
+    // Adjust the viewport to match the canvas aspect ratio
+    const center = [
+        (leftTop[0] + rightBottom[0]) / 2,
+        (leftTop[1] + rightBottom[1]) / 2
+    ];
+    
+    const latSpan = Math.abs(rightBottom[0] - leftTop[0]);
+    const lonSpan = Math.abs(rightBottom[1] - leftTop[1]);
+    
+    if (mercatorAspectRatio > canvasAspectRatio) {
+        // Width is limiting factor, adjust height
+        const newLatSpan = latSpan * (mercatorAspectRatio / canvasAspectRatio);
+        return {
+            leftTop: [center[0] + newLatSpan/2, leftTop[1]],
+            rightBottom: [center[0] - newLatSpan/2, rightBottom[1]]
+        };
+    } else {
+        // Height is limiting factor, adjust width
+        const newLonSpan = lonSpan * (canvasAspectRatio / mercatorAspectRatio);
+        return {
+            leftTop: [leftTop[0], center[1] - newLonSpan/2],
+            rightBottom: [rightBottom[0], center[1] + newLonSpan/2]
+        };
+    }
+}
+
+
+
 export class Viewport {
     #canvas;
     #chunk = null;  
     #api;
     
+
     constructor(width, height, id = 'map-canvas') {
         this.#api = new MapAPI('http://localhost:8080/api');
         
-        // Initial viewport state
-        this.leftTop = [51, 14];          
-        this.rightBottom = [50, 15];  
-        this.center = [
-            (this.leftTop[0] + this.rightBottom[0]) / 2,
-            (this.leftTop[1] + this.rightBottom[1]) / 2
-        ];
-        
-        // Zoom state
-        this.metersPerPixel = 50;
-        
-        setInterval(() => {
-            this.updateChunks();
-        }, 25);
-        setInterval(() => {
-            this.draw();
-        }, 25);
-
-        // Canvas setup
+        // Create canvas first
         this.#canvas = document.createElement('canvas');
         this.#canvas.width = width;
         this.#canvas.height = height;
         this.#canvas.id = id;
         
-        // Mouse interaction state
+
+        
+        // Initial viewport state with proper aspect ratio
+        const initialLat = 51;  // Center latitude
+        const initialLon = 14;  // Center longitude
+        
+        // Calculate proper initial spans based on canvas aspect ratio
+        const canvasRatio = width / height;
+        const latSpan = 20;  // Initial latitude span
+        const mercatorSpan = this.#latToMercatorY(initialLat + latSpan/2) - 
+                            this.#latToMercatorY(initialLat - latSpan/2);
+        const lonSpan = mercatorSpan * canvasRatio;
+        
+        this.leftTop = [
+            initialLat + latSpan/2,
+            initialLon - lonSpan/2
+        ];
+        
+        this.rightBottom = [
+            initialLat - latSpan/2,
+            initialLon + lonSpan/2
+        ];
+        
+        // Adjust viewport for proper aspect ratio
+        const adjusted = adjustViewportForAspectRatio(this.#canvas, this.leftTop, this.rightBottom);
+        this.leftTop = adjusted.leftTop;
+        this.rightBottom = adjusted.rightBottom;
+        
+        this.center = [
+            (this.leftTop[0] + this.rightBottom[0]) / 2,
+            (this.leftTop[1] + this.rightBottom[1]) / 2
+        ];
+        
+        this.metersPerPixel = 50;
         this.isDragging = false;
         this.lastMouseX = 0;
         this.lastMouseY = 0;
-        
         this.year = 2024;
         
         document.querySelector("#app").appendChild(this.#canvas);
         this.#setupEventListeners();
         
+        setInterval(() => {
+            this.updateChunks();
+        }, 25);
+        
+        setInterval(() => {
+            this.draw();
+        }, 25);
+        
         this.updateChunks();
+    }
+
+    #pixelDeltaToLatLonDelta(dx, dy) {
+        let canvas = this.#canvas 
+        let leftTop = this.leftTop
+        let rightBottom = this.rightBottom
+
+
+        const centerPx = [canvas.width/2, canvas.height/2];
+        const centerLatLon = pixelToLatLon(centerPx, [canvas.width, canvas.height], leftTop, rightBottom);
+        
+        const movedPx = [centerPx[0] + dx, centerPx[1] + dy];
+        const movedLatLon = pixelToLatLon(movedPx, [canvas.width, canvas.height], leftTop, rightBottom);
+        
+        return [
+            movedLatLon[0] - centerLatLon[0],  // dlat
+            movedLatLon[1] - centerLatLon[1]   // dlon
+        ];
     }
 
     getCanvas() {
@@ -350,12 +454,15 @@ export class Viewport {
     
     calculateZoomLevel() {
         const latSpan = Math.abs(this.rightBottom[0] - this.leftTop[0]);
+        
+        const centerLat = (this.rightBottom[0] + this.leftTop[0]) / 2;
+        const centerLon = (this.rightBottom[1] + this.leftTop[1]) / 2;
+        
         document.querySelector("#debug").textContent = `
-        lattitude span: ${latSpan}
-        right bottom: ${this.rightBottom}
-        left top: ${this.leftTop}
+        lattitude: ${centerLat.toFixed(4)}
+        <br> longitude ${centerLon.toFixed(4)}
         `;
-        return Math.floor(Math.log2(360 / latSpan));
+        return Math.floor(Math.log2(360 / latSpan*0.9));
     }
     
     #setupEventListeners() {
@@ -378,114 +485,135 @@ export class Viewport {
         ];
     }
 
-    
     #handleWheel(e) {
         e.preventDefault();
         
-        const MIN_METERS_PER_PIXEL = 0.1;
-        const MAX_METERS_PER_PIXEL = 6000;
+        const zoomFactor = e.deltaY > 0 ? 1.1 : 0.9;
         
-        const zoomFactor = e.deltaY > 0 ? 1.05 : 0.95;
-        const newMetersPerPixel = this.metersPerPixel * zoomFactor;
+        // Calculate center point
+        const centerLat = (this.leftTop[0] + this.rightBottom[0]) / 2;
+        const centerLon = (this.leftTop[1] + this.rightBottom[1]) / 2;
         
-        if (newMetersPerPixel < MIN_METERS_PER_PIXEL || 
-            newMetersPerPixel > MAX_METERS_PER_PIXEL ||
-            isNaN(newMetersPerPixel)) {
-            return;
-        }
+        // Calculate current latSpan
+        let latSpan = Math.abs(this.rightBottom[0] - this.leftTop[0]);
         
-        this.metersPerPixel = newMetersPerPixel;
+        // Apply zoom to latSpan
+        latSpan *= zoomFactor;
         
-        // Calculate current center with NaN checks
-        const centerLat = (this.leftTop[0] + this.rightBottom[0]) / 2 || 0;
-        const centerLon = (this.leftTop[1] + this.rightBottom[1]) / 2 || 0;
+        // Clamp latSpan to prevent going beyond poles
+        latSpan = Math.min(170, Math.max(0.1, latSpan));
         
-        if (isNaN(centerLat) || isNaN(centerLon)) {
-            console.error('Invalid center coordinates');
-            return;
-        }
+        // Calculate lonSpan based on canvas aspect ratio
+        // We want the mercator-projected shape to match canvas ratio
+        const canvasRatio = this.#canvas.width / this.#canvas.height;
+        const mercatorLatSpan = Math.log(Math.tan((90 + latSpan/2) * Math.PI / 360)) - 
+                               Math.log(Math.tan((90 - latSpan/2) * Math.PI / 360));
+        const mercatorLonSpan = mercatorLatSpan * canvasRatio;
+        const lonSpan = (mercatorLonSpan * 180) / Math.PI;
         
-        // Calculate current spans with NaN checks
-        const latSpan = this.rightBottom[0] - this.leftTop[0];
-        const lonSpan = this.rightBottom[1] - this.leftTop[1];
-        
-        if (isNaN(latSpan) || isNaN(lonSpan)) {
-            console.error('Invalid span calculation');
-            return;
-        }
-        
-        // Calculate new spans
-        const newLatSpan = latSpan * zoomFactor;
-        const newLonSpan = lonSpan * zoomFactor;
-        
-        if (isNaN(newLatSpan) || isNaN(newLonSpan)) {
-            console.error('Invalid new span calculation');
-            return;
-        }
-        
+        // Update viewport bounds with clamping
         const newLeftTop = [
-            centerLat - (newLatSpan / 2),
-            centerLon - (newLonSpan / 2)
+            Math.min(85, Math.max(-85, centerLat + latSpan/2)),
+            centerLon - lonSpan/2
         ];
         
         const newRightBottom = [
-            centerLat + (newLatSpan / 2),
-            centerLon + (newLonSpan / 2)
+            Math.min(85, Math.max(-85, centerLat - latSpan/2)),
+            centerLon + lonSpan/2
         ];
         
-        // Final validation before assignment
-        if (newLeftTop.some(isNaN) || newRightBottom.some(isNaN)) {
-            console.error('Invalid coordinate calculation');
-            return;
-        }
-        
         this.leftTop = newLeftTop;
         this.rightBottom = newRightBottom;
     }
 
+    updateCanvasSize(width, height) {
+        // Apply size changes
+        this.#canvas.width = width;
+        this.#canvas.height = height;
+        
+        // Recalculate viewport bounds to maintain aspect ratio
+        const centerLat = (this.leftTop[0] + this.rightBottom[0]) / 2;
+        const centerLon = (this.leftTop[1] + this.rightBottom[1]) / 2;
+        
+        // Keep current latSpan
+        const latSpan = Math.abs(this.rightBottom[0] - this.leftTop[0]);
+        
+        // Calculate new lonSpan based on new canvas ratio
+        const canvasRatio = width / height;
+        const mercatorLatSpan = Math.log(Math.tan((90 + latSpan/2) * Math.PI / 360)) - 
+                               Math.log(Math.tan((90 - latSpan/2) * Math.PI / 360));
+        const mercatorLonSpan = mercatorLatSpan * canvasRatio;
+        const lonSpan = (mercatorLonSpan * 180) / Math.PI;
+        
+        // Update viewport bounds
+        this.leftTop = [
+            centerLat + latSpan/2,
+            centerLon - lonSpan/2
+        ];
+        
+        this.rightBottom = [
+            centerLat - latSpan/2,
+            centerLon + lonSpan/2
+        ];
+    }
 
-    #handleMouseMove(e) {
-        if (!this.isDragging) return;
-        
-        const rect = this.#canvas.getBoundingClientRect();
-        const currentX = e.clientX - rect.left;
-        const currentY = e.clientY - rect.top;
-        
-        const dx = -(currentX - this.lastMouseX) || 0;
-        const dy = -(currentY - this.lastMouseY) || 0;
+#addLatLonDelta(latlon, dlatlon) {
+    return [
+        latlon[0] + dlatlon[0],
+        latlon[1] + dlatlon[1] 
+    ];
+}
+#handleMouseMove(e) {
+    if (!this.isDragging) return;
     
-        // Limit latitude range to prevent extreme distortion
-        const MAX_LATITUDE = 75;  // Prevent scrolling too far north/south
-        const MIN_LATITUDE = -75;
-        
-        const deltaLatLon = pixelDeltaToLatLonDelta(
-            dx, dy,
-            this.#canvas,
-            this.leftTop,
-            this.rightBottom
-        );
-        
-        let newLeftTop = addLatLonDelta(this.leftTop, deltaLatLon);
-        let newRightBottom = addLatLonDelta(this.rightBottom, deltaLatLon);
-        
-        if (newLeftTop[0] > MAX_LATITUDE) {
-            const diff = newLeftTop[0] - MAX_LATITUDE;
-            newLeftTop[0] = MAX_LATITUDE;
-            newRightBottom[0] = newRightBottom[0] - diff;
-        }
-        if (newRightBottom[0] < MIN_LATITUDE) {
-            const diff = MIN_LATITUDE - newRightBottom[0];
-            newRightBottom[0] = MIN_LATITUDE;
-            newLeftTop[0] = newLeftTop[0] + diff;
-        }
-        
-        this.leftTop = newLeftTop;
-        this.rightBottom = newRightBottom;
-        
-        this.lastMouseX = currentX;
-        this.lastMouseY = currentY;
+    const rect = this.#canvas.getBoundingClientRect();
+    const currentX = e.clientX - rect.left;
+    const currentY = e.clientY - rect.top;
+    
+    // Calculate the pixel movement
+    const dx = currentX - this.lastMouseX;
+    const dy = currentY - this.lastMouseY;
+    
+    // Get the latitude scale factor (Mercator projection gets stretched at high latitudes)
+    const centerLat = (this.leftTop[0] + this.rightBottom[0]) / 2;
+    const latScale = Math.cos(centerLat * Math.PI / 180);
+    
+    // Calculate spans
+    const latSpan = this.rightBottom[0] - this.leftTop[0];
+    const lonSpan = this.rightBottom[1] - this.leftTop[1];
+    
+    // Convert pixel movement to coordinate deltas, accounting for latitude scale
+    const dLat = -(dy / this.#canvas.height) * latSpan;
+    const dLon = -(dx / this.#canvas.width) * lonSpan / latScale;
+    
+    // Update coordinates with boundary checks
+    const newLeftTop = [
+        Math.min(85, Math.max(-85, this.leftTop[0] + dLat)),
+        this.leftTop[1] + dLon
+    ];
+    
+    const newRightBottom = [
+        Math.min(85, Math.max(-85, this.rightBottom[0] + dLat)),
+        this.rightBottom[1] + dLon
+    ];
+    
+    // Handle wrapping around the globe
+    if (newLeftTop[1] < -180) {
+        const wrap = newLeftTop[1] + 360;
+        newLeftTop[1] = wrap;
+        newRightBottom[1] = wrap + (this.rightBottom[1] - this.leftTop[1]);
+    } else if (newLeftTop[1] > 180) {
+        const wrap = newLeftTop[1] - 360;
+        newLeftTop[1] = wrap;
+        newRightBottom[1] = wrap + (this.rightBottom[1] - this.leftTop[1]);
     }
-
+    
+    this.leftTop = newLeftTop;
+    this.rightBottom = newRightBottom;
+    
+    this.lastMouseX = currentX;
+    this.lastMouseY = currentY;
+}
     #handleMouseDown(e) {
         const rect = this.#canvas.getBoundingClientRect();
         this.lastMouseX = e.clientX - rect.left;
@@ -505,14 +633,29 @@ export class Viewport {
             this.#canvas.style.cursor = 'grab';
         }
     }
+
+    #latToMercatorY(lat) {
+        const latRad = lat * Math.PI / 180;
+        return Math.log(Math.tan(Math.PI / 4 + latRad / 2));
+    }
+
+
     draw() {
         const ctx = this.#canvas.getContext('2d');
         ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
         ctx.fillStyle = 'rgb(70, 70, 70)';
         ctx.fillRect(0, 0, this.#canvas.width, this.#canvas.height);
+        
         if (!this.#chunk) return;
-    
-        // Store all polygon pixel coordinates for overlap detection
+        
+        const viewportBounds = {
+            leftTop: this.leftTop,
+            rightBottom: this.rightBottom
+        };
+        
+        const canvasSize = [this.#canvas.width, this.#canvas.height];
+        
+        // Store polygons for later use
         const polygons = [];
         
         // First pass: Draw fills and collect polygon data
@@ -522,46 +665,44 @@ export class Viewport {
             zone.coords.forEach(coord => {
                 if (coord.type === 'Polygon' && coord.coordinates && coord.coordinates[0]) {
                     const mercatorPoints = latLonToMercator(coord.coordinates[0]);
-                    const normalized = normalizeMercator(
-                        this.#chunk.center,
-                        this.#chunk.leftTop,
-                        this.#chunk.rightBottom,
-                        mercatorPoints
-                    );
-                    const pixels = resizeToShape(normalized, [this.#canvas.width, this.#canvas.height]);
+                    const screenPoints = mercatorToScreen(mercatorPoints, viewportBounds, canvasSize);
                     
-                    // Store polygon data
+                    // Store polygon data with all necessary information
                     polygons.push({
-                        pixels,
+                        pixels: screenPoints,
                         color: zone.color || [100, 149, 237],
-                        intensity: zone.intensity
+                        intensity: zone.intensity,
+                        name: zone.name,
+                        area: calculatePolygonArea(screenPoints)
                     });
                     
                     // Draw fill
                     ctx.beginPath();
-                    ctx.moveTo(pixels[0][0], pixels[0][1]);
-                    for (let i = 1; i < pixels.length; i++) {
-                        ctx.lineTo(pixels[i][0], pixels[i][1]);
+                    ctx.moveTo(screenPoints[0][0], screenPoints[0][1]);
+                    
+                    for (let i = 1; i < screenPoints.length; i++) {
+                        ctx.lineTo(screenPoints[i][0], screenPoints[i][1]);
                     }
+                    
                     ctx.closePath();
                     ctx.fillStyle = `rgba(${zone.color?.[0] || 100}, ${zone.color?.[1] || 149}, ${zone.color?.[2] || 237}, ${zone.intensity * 0.3})`;
                     ctx.fill();
                 }
             });
         }
-    
+        
         // Second pass: Draw borders with glow and dotted overlaps
         ctx.lineWidth = 2;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         
-        // Draw glow effect first
-        polygons.forEach((polygon, i) => {
+        // Draw glow effect
+        polygons.forEach(polygon => {
             ctx.beginPath();
             ctx.moveTo(polygon.pixels[0][0], polygon.pixels[0][1]);
             
-            for (let j = 1; j < polygon.pixels.length; j++) {
-                ctx.lineTo(polygon.pixels[j][0], polygon.pixels[j][1]);
+            for (let i = 1; i < polygon.pixels.length; i++) {
+                ctx.lineTo(polygon.pixels[i][0], polygon.pixels[i][1]);
             }
             
             ctx.closePath();
@@ -572,7 +713,7 @@ export class Viewport {
             ctx.strokeStyle = `rgba(${polygon.color[0]}, ${polygon.color[1]}, ${polygon.color[2]}, 0.8)`;
             ctx.stroke();
         });
-    
+        
         // Reset shadow for clean borders
         ctx.shadowBlur = 0;
         
@@ -582,7 +723,7 @@ export class Viewport {
                 const overlappingSegments = findOverlappingSegments(polygons[i].pixels, polygons[j].pixels);
                 
                 if (overlappingSegments.length > 0) {
-                    ctx.setLineDash([4, 4]); // Create dotted line
+                    ctx.setLineDash([4, 4]);
                     ctx.lineWidth = 2;
                     ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
                     
@@ -596,10 +737,8 @@ export class Viewport {
             }
         }
         
-        // Reset line dash for normal borders
+        // Reset line dash and draw regular borders
         ctx.setLineDash([]);
-        
-        // Draw regular borders
         polygons.forEach(polygon => {
             ctx.beginPath();
             ctx.moveTo(polygon.pixels[0][0], polygon.pixels[0][1]);
@@ -612,52 +751,44 @@ export class Viewport {
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
             ctx.stroke();
         });
-    
-        // Draw labels (keeping existing label logic)
-        const labels = [];
         
-        for (const zone of this.#chunk.zones) {
-            if (!zone.coords || !zone.coords.length) continue;
-            
-            zone.coords.forEach(coord => {
-                if (coord.type === 'Polygon' && coord.coordinates && coord.coordinates[0]) {
-                    const centerPoint = calculatePolygonCenter(coord.coordinates[0]);
-                    const pixelCoords = latLonToPixel(
-                        centerPoint,
-                        [this.#canvas.width, this.#canvas.height],
-                        this.#chunk.leftTop,
-                        this.#chunk.rightBottom
-                    );
-                    
-                    const area = calculatePolygonArea(coord.coordinates[0]);
-                    
-                    labels.push({
-                        x: pixelCoords[0],
-                        y: pixelCoords[1],
-                        text: zone.name,
-                        area: area
-                    });
-                }
-            });
-        }
-    
+        // Create labels from polygon data
+        const labels = polygons.map(polygon => ({
+            x: calculatePolygonCenter(polygon.pixels)[0],
+            y: calculatePolygonCenter(polygon.pixels)[1],
+            text: polygon.name,
+            area: polygon.area
+        }));
+        
+        // Sort and filter labels
         labels.sort((a, b) => b.area - a.area);
         const visibleLabels = filterOverlappingLabels(labels);
-    
+        
+        // Draw labels
         ctx.save();
         ctx.font = 'bold 12px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         
         visibleLabels.forEach(label => {
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 3;
-            ctx.lineJoin = 'round';
-            ctx.miterLimit = 2;
-            ctx.strokeText(label.text, label.x, label.y);
-            
-            ctx.fillStyle = 'black';
-            ctx.fillText(label.text, label.x, label.y);
+            // Only draw if label is within canvas bounds with padding
+            const padding = 10;
+            if (label.x >= padding && 
+                label.x <= this.#canvas.width - padding && 
+                label.y >= padding && 
+                label.y <= this.#canvas.height - padding) {
+                
+                // White outline
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 3;
+                ctx.lineJoin = 'round';
+                ctx.miterLimit = 2;
+                ctx.strokeText(label.text, label.x, label.y);
+                
+                // Black text
+                ctx.fillStyle = 'black';
+                ctx.fillText(label.text, label.x, label.y);
+            }
         });
         
         ctx.restore();
@@ -820,5 +951,5 @@ function pointToSegmentDistance(px, py, x1, y1, x2, y2) {
     return Math.sqrt(dx * dx + dy * dy);
 }
 
-const viewport = new Viewport(800, 600);
+const viewport = new Viewport(1200, 1000);
 export default viewport;
