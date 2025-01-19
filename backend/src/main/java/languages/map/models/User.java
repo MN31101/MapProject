@@ -13,4 +13,5 @@ public class User {
     ObjectId[] ownedZones;
     String email;
     String name;
+    String status;
 }
