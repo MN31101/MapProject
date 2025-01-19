@@ -6,6 +6,7 @@ import languages.map.services.LanguagesZoneService;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,16 +113,18 @@ public class LanguagesZoneController {
     }
 
     @DeleteMapping("/area")
-    public ResponseEntity<LanguagesZone> deleteLanguageZone(@RequestBody LanguagesZone languageZone){
+    public ResponseEntity<?> deleteLanguageZone(@RequestBody LanguagesZone languageZone) {
         logger.info("Deleting language zone with id: {}", languageZone.getId());
         logger.debug("Deleted language zone data: {}", languageZone);
         try {
             languagesZoneService.deleteLanguageZone(languageZone);
-            logger.info("Successfully delete language zone with id: {}", languageZone.getId());
+            logger.info("Successfully deleted language zone with id: {}", languageZone.getId());
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             logger.error("Failed to delete language zone with id: {}", languageZone.getId(), e);
-            throw e;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete language zone");
         }
     }
+
 }

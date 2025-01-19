@@ -12,9 +12,11 @@ import languages.map.models.LanguagesZone;
 import languages.map.serializers.ObjectIdSerializer;
 import languages.map.services.ChunkService;
 import languages.map.services.LanguagesZoneService;
+import languages.map.services.UserService;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.*;
@@ -24,9 +26,6 @@ import org.springframework.data.mongodb.core.geo.GeoJsonPolygon;
 import org.springframework.http.*;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.List;
 
@@ -36,16 +35,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(controllers = {ChunkController.class, LanguagesZoneController.class})
 @ContextConfiguration(classes = {ControllersTest.TestConfig.class, SecurityConfig.class})
 public class ControllersTest {
 
     @Configuration
     @ComponentScan(basePackages = "languages.map.controllers")
+    @Import(SecurityConfig.class)
     static class TestConfig {
         @Bean
         public ChunkService chunkService() {
             return mock(ChunkService.class);
+        }
+
+        @Bean
+        public UserService userService() {
+            return mock(UserService.class);
         }
 
         @Bean
@@ -75,9 +81,6 @@ public class ControllersTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private WebApplicationContext context;
 
     private Chunk testChunk;
     private LanguagesZone testZone;
@@ -118,16 +121,7 @@ public class ControllersTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        context.getBeansOfType(HandlerMapping.class)
-                .values()
-                .forEach(mapping -> {
-                    if (mapping instanceof RequestMappingHandlerMapping) {
-                        ((RequestMappingHandlerMapping) mapping)
-                                .getHandlerMethods()
-                                .forEach((key, value) ->
-                                        System.out.println("Mapped: " + key + " to " + value));
-                    }
-                });
+        Mockito.reset(languagesZoneService);
     }
 
     @Test
@@ -225,33 +219,35 @@ public class ControllersTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.id").value(testZone.getId().toString()));
     }
- /*   @Test
+    @Test
     void deleteLanguageZone_ShouldReturnOk() throws Exception {
-        // Mock the service method
         doNothing().when(languagesZoneService).deleteLanguageZone(any(LanguagesZone.class));
 
-        mockMvc.perform(delete("/area")
+        String requestBody = objectMapper.writeValueAsString(testZone);
+
+        mockMvc.perform(delete("/api/area")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\": \"1\"}")) // Assuming the body contains the ID to delete
+                        .content(requestBody))
                 .andExpect(status().isOk());
 
-        // Verify that the service delete method was called
         verify(languagesZoneService, times(1)).deleteLanguageZone(any(LanguagesZone.class));
     }
 
     @Test
     void deleteLanguageZone_ShouldReturnInternalServerError_OnFailure() throws Exception {
-        // Mock the service method to throw an exception
         doThrow(new RuntimeException("Delete failed")).when(languagesZoneService).deleteLanguageZone(any(LanguagesZone.class));
+
+        String requestBody = objectMapper.writeValueAsString(testZone);
 
         mockMvc.perform(delete("/api/area")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\": \"1\"}"))
-                .andExpect(status().isOk());
+                        .content(requestBody))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Failed to delete language zone"));
 
-        // Verify that the service delete method was called
         verify(languagesZoneService, times(1)).deleteLanguageZone(any(LanguagesZone.class));
     }
 
-  */
+
+
 }

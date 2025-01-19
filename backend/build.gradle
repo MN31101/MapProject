@@ -31,7 +31,8 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic'
     implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
-    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'jakarta.websocket:jakarta.websocket-client-api:2.2.0'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-websocket'
 
     implementation 'org.mongodb:mongodb-driver-core:4.11.2'
     implementation 'org.mongodb:mongodb-driver-sync:4.11.2'
@@ -58,7 +59,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test:6.0.0'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testImplementation 'org.mockito:mockito-core'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
