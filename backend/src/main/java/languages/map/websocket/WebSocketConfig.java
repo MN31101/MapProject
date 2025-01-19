@@ -2,8 +2,6 @@ package languages.map.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
@@ -20,8 +18,6 @@ import java.util.List;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableSimpleBroker("/topic", "/queue", "/user");

@@ -27,10 +27,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'ch.qos.logback:logback-core'
-    implementation 'ch.qos.logback:logback-classic'
-    implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
-
     implementation 'jakarta.websocket:jakarta.websocket-client-api:2.2.0'
     implementation 'org.apache.tomcat.embed:tomcat-embed-websocket'
 

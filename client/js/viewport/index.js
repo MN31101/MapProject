@@ -399,7 +399,7 @@ export class Viewport {
         
         setInterval(() => {
             this.updateChunks();
-        }, 25);
+        }, 100);
         
         setInterval(() => {
             this.draw();

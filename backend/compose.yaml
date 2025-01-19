@@ -1,7 +1,0 @@
-services:
-  map:
-    container_name: map
-    build: .
-    ports:
-      - "8081:8080"
-

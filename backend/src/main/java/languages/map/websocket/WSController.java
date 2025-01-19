@@ -15,9 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
-public class WSController {
-    private static final Logger logger = LoggerFactory.getLogger(WSController.class);
-    private final SimpMessagingTemplate messagingTemplate;
+public class WSController { private final SimpMessagingTemplate messagingTemplate;
     private final Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     public WSController(SimpMessagingTemplate messagingTemplate) {
@@ -29,12 +27,9 @@ public class WSController {
     public WebSocketMessage sendMessage(@Payload WebSocketMessage message,
                                         SimpMessageHeaderAccessor headerAccessor) {
         try {
-            logger.debug("Received message: {}", message);
-            // Add username in web socket session
             headerAccessor.getSessionAttributes().put("username", message.getSender());
             return message;
         } catch (Exception e) {
-            logger.error("Error processing message", e);
             throw e;
         }
     }
@@ -42,14 +37,12 @@ public class WSController {
     @MessageMapping("/sendPrivateMessage")
     public void sendPrivateMessage(@Payload WebSocketMessage message) {
         try {
-            logger.debug("Sending private message to: {}", message.getRecipient());
             messagingTemplate.convertAndSendToUser(
                     message.getRecipient(),
                     "/queue/private",
                     message
             );
         } catch (Exception e) {
-            logger.error("Error sending private message", e);
             throw e;
         }
     }
@@ -63,7 +56,6 @@ public class WSController {
     public void register(Principal principal, SimpMessageHeaderAccessor headerAccessor) {
         String sessionId = headerAccessor.getSessionId();
         if (sessionId != null) {
-            logger.info("User registered: {} with session: {}", principal.getName(), sessionId);
             sessions.put(sessionId, new WebSocketSession(principal.getName(), sessionId));
         }
     }
@@ -72,10 +64,8 @@ public class WSController {
     public void sendHeartbeat() {
         try {
             messagingTemplate.convertAndSend("/topic/heartbeat", "ping");
-            logger.debug("Heartbeat sent");
-        } catch (Exception e) {
-            logger.error("Error sending heartbeat", e);
-        }
+          } catch (Exception e) {
+            }
     }
 
     // Helper class for session management
